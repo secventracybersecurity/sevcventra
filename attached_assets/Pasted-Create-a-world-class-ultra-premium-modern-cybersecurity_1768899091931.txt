@@ -1,0 +1,196 @@
+Create a world-class, ultra-premium, modern cybersecurity company website for a Penetration Testing & Offensive Security firm, inspired by the design quality, smoothness, storytelling, and elegance of Apple.com, combined with the professionalism of top cybersecurity brands.
+
+This website must feel:
+
+Minimal
+
+Luxury
+
+Powerful
+
+Clean
+
+Futuristic
+
+High-trust
+
+The website must attract enterprise clients and venture capital investors.
+
+🎨 DESIGN LANGUAGE
+
+Apple-style minimal layout
+
+Large bold typography
+
+Perfect spacing and alignment
+
+Black, white, dark gray base colors
+
+Neon blue/green cybersecurity accents
+
+Glassmorphism panels
+
+Soft gradients
+
+Ultra-clean UI
+
+No clutter
+
+✨ MOTION & INTERACTIONS (APPLE-LIKE)
+
+Implement luxury micro-interactions:
+
+Hero text fade + slide animation
+
+Scroll-based storytelling animations
+
+Parallax depth movement
+
+Smooth section transitions
+
+Button hover ripple / glow
+
+Image reveal masks
+
+Sticky navbar with blur
+
+Subtle cursor interactions
+
+Section pinning while scrolling
+
+Frictionless smooth scrolling
+
+Animations must feel cinematic, smooth, and premium, not flashy.
+
+📑 WEBSITE STRUCTURE (ALL FULLY WORKING)
+1. Home Page (Storytelling Style)
+
+Full-screen hero with cinematic headline animation
+“Redefining Cybersecurity Excellence.”
+
+Scroll-driven storytelling sections
+
+Animated statistics reveal
+
+Floating service cards
+
+Apple-style product storytelling layout
+
+Luxury CTA sections
+
+2. Services (Apple Product Page Style)
+
+Each service presented like an Apple product:
+
+Web App Pentesting
+
+API Security
+
+Cloud Security
+
+Network Pentesting
+
+Mobile Pentesting
+
+Red Teaming
+
+Each service page includes:
+
+Hero storytelling section
+
+Feature breakdown with animations
+
+Visual methodology flow
+
+Benefit highlights
+
+3. About Us
+
+Cinematic mission reveal
+
+Scroll-timeline animation
+
+Vision storytelling
+
+4. Why Choose Us
+
+Apple-style comparison layout
+
+Interactive advantage blocks
+
+5. Case Studies
+
+Full-screen storytelling slides
+
+Scroll reveal results
+
+6. Careers
+
+Minimal Apple-style job listings
+
+Smooth transitions
+
+7. Blog / Research
+
+Clean editorial layout like Apple newsroom
+
+8. Contact
+
+Luxury animated form
+
+Map reveal animation
+
+🛠️ TECH STACK
+
+Next.js / React
+
+Tailwind CSS
+
+Framer Motion
+
+GSAP for scroll animations
+
+SEO optimized
+
+Ultra-fast loading
+
+Fully responsive
+
+Accessible
+
+💼 INVESTOR IMPRESSION
+
+The website must communicate:
+
+Market leadership
+
+Vision
+
+Innovation
+
+Trust
+
+Scalability
+
+It must look like a future $1B cybersecurity unicorn startup.
+
+📦 OUTPUT FORMAT
+
+Provide:
+
+Full source code
+
+Folder structure
+
+Setup instructions
+
+Deployment steps
+
+Preview screenshots
+
+Build this website as a luxury, cinematic, Apple-level cybersecurity website with modern storytelling, elegant animations, and enterprise branding.
+
+⚡ OPTIONAL ADD
+
+Company name: Secventra
+Tagline: “Securing Tomorrow, Today.”
