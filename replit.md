@@ -88,7 +88,7 @@ The site follows strict design guidelines defined in `design_guidelines.md`:
 - All interactive elements have data-testid attributes for testing
 
 ### Pages Implemented
-1. **Home**: Cinematic hero, services preview, statistics section, client logos, CTA
+1. **Home**: Cinematic hero with stock images, animated counters, floating particles, team section, testimonials, FAQ accordion, CTA
 2. **Services**: 6 detailed service offerings with methodology breakdowns
 3. **About**: Mission statement, core values, leadership team
 4. **Why Us**: Comparison table, testimonials carousel
@@ -96,3 +96,12 @@ The site follows strict design guidelines defined in `design_guidelines.md`:
 6. **Careers**: Expandable job listings with requirements
 7. **Blog**: Featured articles with category filtering
 8. **Contact**: Form with shadcn Form/react-hook-form/zodResolver and TanStack Query mutation
+
+### Enhanced Visual Features (January 2026)
+- **Stock Images**: Hero background, data center image, team photo, CTA background
+- **AnimatedCounter**: Spring-based number animation that counts up when scrolled into view
+- **FloatingParticles**: 20 animated blue particles floating across sections
+- **CyberGrid**: Grid pattern with animated scanning line effect
+- **Team Section**: Professional team photo with avatar stack and 4 team stat cards
+- **All images have data-testids**: image-hero, image-datacenter, image-team, image-cta
+- **Team stats testids**: team-stats-grid, stat-team-experts, stat-team-certs, stat-team-countries, stat-team-bounties
