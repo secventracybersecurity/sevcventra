@@ -18,6 +18,7 @@ import {
   Quote
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AnimatedSection, AnimatedText, GlassCard } from "@/components/AnimatedSection";
 
 const services = [
@@ -136,10 +137,10 @@ function FAQItem({ question, answer, isOpen, onClick }: {
     <div className="border-b border-white/10 last:border-0">
       <button
         onClick={onClick}
-        className="w-full py-6 flex items-center justify-between text-left group"
+        className="w-full py-6 flex items-center justify-between text-left"
         data-testid={`faq-${question.slice(0, 20).replace(/\s+/g, '-').toLowerCase()}`}
       >
-        <span className="text-lg font-medium text-white/90 group-hover:text-white transition-colors pr-4">
+        <span className="text-lg font-medium text-white/90 pr-4">
           {question}
         </span>
         <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
@@ -316,11 +317,11 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((service, index) => (
               <AnimatedSection key={service.title} delay={index * 0.1}>
-                <GlassCard className="p-8 h-full cursor-pointer group">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-amber-500/10 flex items-center justify-center mb-6 group-hover:from-blue-500/30 group-hover:to-amber-500/20 transition-all duration-300">
+                <GlassCard className="p-8 h-full">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-amber-500/10 flex items-center justify-center mb-6">
                     <service.icon className="w-8 h-8 text-blue-400" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-blue-300 transition-colors">
+                  <h3 className="text-xl font-semibold mb-3 text-white">
                     {service.title}
                   </h3>
                   <p className="text-white/50 leading-relaxed">
@@ -424,9 +425,11 @@ export default function Home() {
                     "{testimonial.quote}"
                   </p>
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500/30 to-amber-500/20 flex items-center justify-center">
-                      <span className="text-lg font-bold text-white">{testimonial.author[0]}</span>
-                    </div>
+                    <Avatar className="w-12 h-12 bg-gradient-to-br from-blue-500/30 to-amber-500/20">
+                      <AvatarFallback className="bg-transparent text-lg font-bold text-white">
+                        {testimonial.author[0]}
+                      </AvatarFallback>
+                    </Avatar>
                     <div>
                       <div className="font-semibold text-white">{testimonial.author}</div>
                       <div className="text-white/40 text-sm">{testimonial.role}, {testimonial.company}</div>
