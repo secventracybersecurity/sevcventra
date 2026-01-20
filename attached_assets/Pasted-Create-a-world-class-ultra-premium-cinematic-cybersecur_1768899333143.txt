@@ -1,0 +1,241 @@
+Create a world-class, ultra-premium, cinematic cybersecurity company website for a Penetration Testing & Offensive Security firm, inspired by:
+
+Apple.com level elegance
+
+Famous luxury tech websites
+
+AND the exact animation style shown in my reference video
+
+The website must feel:
+
+Cinematic
+
+Story-driven
+
+Luxury
+
+Minimal
+
+Powerful
+
+High-trust
+
+Future-ready
+
+This website must impress enterprise clients and venture capital investors.
+
+🎬 ANIMATION STYLE (VERY IMPORTANT)
+
+Use the same animation style as the reference video, including:
+
+Scroll-driven storytelling animation
+
+Text revealing with smooth mask transitions
+
+Layered depth movement
+
+Parallax object motion
+
+Cinematic timing (slow, smooth, premium)
+
+Typography motion synchronized with scroll
+
+Elements sliding from depth
+
+Fade + scale + blur transitions
+
+Content appearing like it’s being “uncovered”
+
+No sharp or fast animations — everything must feel luxury
+
+Apple-like cinematic scroll behavior
+
+The animation style must look like:
+
+“A premium cinematic product presentation website.”
+
+🎨 DESIGN LANGUAGE
+
+Apple-style minimal layout
+
+Large bold typography
+
+Perfect spacing and alignment
+
+Black / white / dark gray base colors
+
+
+Glassmorphism panels
+
+Soft gradients
+
+Ultra-clean UI
+
+No clutter
+
+High contrast luxury feel
+
+✨ MOTION & INTERACTIONS
+
+Scroll-based section reveal like the reference video
+
+Sticky navbar with blur
+
+Parallax hero background
+
+Text reveal masks
+
+Image depth movement
+
+Button hover glow
+
+Subtle cursor interactions
+
+Section pinning while scrolling
+
+Smooth cinematic transitions between sections
+
+All animations must follow the same cinematic pacing and style as the reference video.
+
+📑 WEBSITE STRUCTURE (ALL FULLY WORKING)
+1. Home Page (Cinematic Storytelling)
+
+Full-screen hero
+
+Cinematic animated headline
+“Redefining Cybersecurity Excellence.”
+
+Scroll storytelling sections
+
+Animated statistics
+
+Floating service cards
+
+Cinematic CTA sections
+
+2. Services (Apple Product Story Style)
+
+Services:
+
+Web App Pentesting
+
+API Security
+
+Cloud Security
+
+Network Pentesting
+
+Mobile Pentesting
+
+Red Teaming
+
+Each service:
+
+Full-screen storytelling hero
+
+Scroll reveal features
+
+Animated methodology flow
+
+Benefit storytelling blocks
+
+3. About Us
+
+Cinematic mission reveal
+
+Scroll-timeline animation
+
+Vision storytelling
+
+4. Why Choose Us
+
+Cinematic comparison blocks
+
+Interactive advantage sections
+
+5. Case Studies
+
+Full-screen storytelling slides
+
+Scroll reveal results
+
+Before/after impact animations
+
+6. Careers
+
+Minimal Apple-style listings
+
+Smooth transitions
+
+7. Blog / Research
+
+Editorial Apple Newsroom style layout
+
+8. Contact
+
+Luxury animated form
+
+Map reveal animation
+
+🛠️ TECH STACK
+
+Next.js / React
+
+Tailwind CSS
+
+Framer Motion
+
+GSAP ScrollTrigger
+
+Lenis / Smooth Scroll
+
+SEO optimized
+
+Ultra fast
+
+Fully responsive
+
+Accessible
+
+💼 INVESTOR IMPRESSION
+
+The website must communicate:
+
+Market leadership
+
+Vision
+
+Innovation
+
+Trust
+
+Scalability
+
+Enterprise readiness
+
+It must look like a future $1B cybersecurity unicorn startup.
+
+📦 OUTPUT FORMAT
+
+Provide:
+
+Full source code
+
+Folder structure
+
+Setup instructions
+
+Deployment steps
+
+Preview screenshots
+
+🎯 FINAL GOAL
+
+Build this website as:
+
+A cinematic, Apple-level, storytelling cybersecurity website using the exact animation style of the reference video, with modern scroll-driven luxury motion design and enterprise branding.
+
+OPTIONAL BRAND INFO
+
+Company name: Secventra
+Tagline: “Securing Tomorrow, Today.”
