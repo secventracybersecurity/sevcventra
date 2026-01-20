@@ -1,5 +1,5 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
+import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 import { Link } from "wouter";
 import { 
   Shield, 
@@ -20,6 +20,88 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AnimatedSection, AnimatedText, GlassCard } from "@/components/AnimatedSection";
+
+import cyberImage1 from "@assets/stock_images/cybersecurity_networ_a71763c1.jpg";
+import cyberImage2 from "@assets/stock_images/cybersecurity_networ_dcb482f8.jpg";
+import dataCenterImage from "@assets/stock_images/data_center_server_r_2a18e4cb.jpg";
+import teamImage from "@assets/stock_images/professional_busines_69f0cc26.jpg";
+
+function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const motionValue = useMotionValue(0);
+  const springValue = useSpring(motionValue, { duration: 2000, bounce: 0.1 });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  
+  useEffect(() => {
+    if (isInView) {
+      motionValue.set(value);
+    }
+  }, [isInView, motionValue, value]);
+  
+  useEffect(() => {
+    const unsubscribe = springValue.on("change", (latest) => {
+      if (ref.current) {
+        ref.current.textContent = Math.floor(latest).toLocaleString() + suffix;
+      }
+    });
+    return unsubscribe;
+  }, [springValue, suffix]);
+  
+  return <span ref={ref}>0{suffix}</span>;
+}
+
+function FloatingParticles() {
+  const particles = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    size: Math.random() * 4 + 2,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    duration: Math.random() * 20 + 10,
+    delay: Math.random() * 5,
+  }));
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {particles.map((particle) => (
+        <motion.div
+          key={particle.id}
+          className="absolute rounded-full bg-blue-400/20"
+          style={{
+            width: particle.size,
+            height: particle.size,
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+          }}
+          animate={{
+            y: [0, -30, 0],
+            x: [0, 15, 0],
+            opacity: [0.2, 0.6, 0.2],
+          }}
+          transition={{
+            duration: particle.duration,
+            delay: particle.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function CyberGrid() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      <motion.div
+        className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(59,130,246,0.1)_50%,transparent_100%)]"
+        animate={{ x: ["-100%", "100%"] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        style={{ width: "50%" }}
+      />
+    </div>
+  );
+}
 
 const services = [
   {
@@ -182,7 +264,15 @@ export default function Home() {
       {/* Hero Section */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-transparent to-transparent" />
+          <img 
+            src={cyberImage1} 
+            alt="Cybersecurity network" 
+            className="absolute inset-0 w-full h-full object-cover opacity-20"
+            data-testid="image-hero"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background" />
+          <CyberGrid />
+          <FloatingParticles />
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[128px] animate-pulse" />
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-[128px] animate-pulse" style={{ animationDelay: "1s" }} />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,hsl(222,47%,4%)_70%)]" />
@@ -278,20 +368,49 @@ export default function Home() {
       {/* Stats Section */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-amber-500/5" />
+        <FloatingParticles />
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <AnimatedSection key={stat.label} delay={index * 0.15}>
-                <div className="text-center">
-                  <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-3">
-                    {stat.value}
-                  </div>
-                  <div className="text-white/50 text-sm uppercase tracking-wider">
-                    {stat.label}
-                  </div>
+            <AnimatedSection delay={0}>
+              <div className="text-center">
+                <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-3">
+                  <AnimatedCounter value={15} suffix="+" />
                 </div>
-              </AnimatedSection>
-            ))}
+                <div className="text-white/50 text-sm uppercase tracking-wider">
+                  Years Experience
+                </div>
+              </div>
+            </AnimatedSection>
+            <AnimatedSection delay={0.15}>
+              <div className="text-center">
+                <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-3">
+                  <AnimatedCounter value={500} suffix="+" />
+                </div>
+                <div className="text-white/50 text-sm uppercase tracking-wider">
+                  Enterprises Protected
+                </div>
+              </div>
+            </AnimatedSection>
+            <AnimatedSection delay={0.3}>
+              <div className="text-center">
+                <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-3">
+                  <AnimatedCounter value={10000} suffix="+" />
+                </div>
+                <div className="text-white/50 text-sm uppercase tracking-wider">
+                  Vulnerabilities Found
+                </div>
+              </div>
+            </AnimatedSection>
+            <AnimatedSection delay={0.45}>
+              <div className="text-center">
+                <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-3">
+                  99.9<span className="text-3xl">%</span>
+                </div>
+                <div className="text-white/50 text-sm uppercase tracking-wider">
+                  Client Retention
+                </div>
+              </div>
+            </AnimatedSection>
           </div>
         </div>
       </section>
@@ -387,15 +506,27 @@ export default function Home() {
             </AnimatedSection>
 
             <AnimatedSection delay={0.3}>
-              <GlassCard className="p-1 overflow-hidden" hover={false}>
-                <div className="aspect-square rounded-xl bg-gradient-to-br from-gray-900 to-background flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500/20 rounded-full blur-[80px]" />
-                  <div className="relative text-center p-8">
-                    <Shield className="w-24 h-24 text-blue-400 mx-auto mb-6" />
-                    <p className="text-2xl font-bold mb-2 text-white">Enterprise Grade</p>
-                    <p className="text-white/50">Security Solutions</p>
-                  </div>
+              <GlassCard className="p-1 overflow-visible" hover={false}>
+                <div className="aspect-[4/3] rounded-xl relative overflow-hidden" data-testid="image-datacenter">
+                  <img 
+                    src={dataCenterImage} 
+                    alt="Secure data center" 
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+                  <div className="absolute inset-0 bg-blue-500/10" />
+                  <motion.div
+                    className="absolute bottom-6 left-6 right-6"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <Shield className="w-8 h-8 text-blue-400" />
+                      <p className="text-xl font-bold text-white">Enterprise Grade</p>
+                    </div>
+                    <p className="text-white/60">Secure infrastructure trusted by Fortune 500</p>
+                  </motion.div>
                 </div>
               </GlassCard>
             </AnimatedSection>
@@ -442,9 +573,81 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Team Section */}
+      <section className="py-32 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[120px]" />
+        </div>
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <AnimatedSection>
+              <div className="relative rounded-2xl overflow-hidden" data-testid="image-team">
+                <img 
+                  src={teamImage} 
+                  alt="Secventra security team" 
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-blue-500/5" />
+                <motion.div
+                  className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background to-transparent"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex -space-x-3">
+                      {["S", "M", "A"].map((initial, i) => (
+                        <Avatar key={i} className="w-10 h-10 border-2 border-background bg-gradient-to-br from-blue-500/40 to-amber-500/30">
+                          <AvatarFallback className="bg-transparent text-white text-sm font-semibold">{initial}</AvatarFallback>
+                        </Avatar>
+                      ))}
+                    </div>
+                    <p className="text-white/70 text-sm">50+ Elite Security Researchers</p>
+                  </div>
+                </motion.div>
+              </div>
+            </AnimatedSection>
+            
+            <AnimatedSection delay={0.2}>
+              <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
+                Our Team
+              </p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                World-Class Security<br />Professionals
+              </h2>
+              <p className="text-xl text-white/50 mb-8 leading-relaxed">
+                Our team includes former NSA analysts, Big Four consultants, and bug bounty legends who have found vulnerabilities in the world's largest companies.
+              </p>
+              <div className="grid grid-cols-2 gap-6" data-testid="team-stats-grid">
+                {[
+                  { value: "50+", label: "Security Experts", id: "experts" },
+                  { value: "200+", label: "Certifications", id: "certs" },
+                  { value: "15", label: "Countries", id: "countries" },
+                  { value: "$10M+", label: "Bounties Earned", id: "bounties" },
+                ].map((stat, index) => (
+                  <motion.div
+                    key={stat.label}
+                    className="text-center p-4 rounded-xl bg-white/5 border border-white/10"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 * index }}
+                    data-testid={`stat-team-${stat.id}`}
+                  >
+                    <div className="text-2xl font-bold text-blue-400 mb-1">{stat.value}</div>
+                    <div className="text-white/50 text-sm">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </div>
+            </AnimatedSection>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section className="py-32 relative">
-        <div className="max-w-4xl mx-auto px-6">
+        <FloatingParticles />
+        <div className="max-w-4xl mx-auto px-6 relative z-10">
           <AnimatedSection className="text-center mb-16">
             <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
               How Do We Operate?
@@ -472,16 +675,42 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent" />
+        <div className="absolute inset-0">
+          <img 
+            src={cyberImage2} 
+            alt="Cybersecurity background" 
+            className="absolute inset-0 w-full h-full object-cover opacity-10"
+            data-testid="image-cta"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
+          <CyberGrid />
+        </div>
+        <FloatingParticles />
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
           <AnimatedSection>
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.8 }}
+              className="mb-8"
+              data-testid="icon-cta-shield"
+            >
+              <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-blue-500/30 to-amber-500/20 flex items-center justify-center mb-6">
+                <Shield className="w-10 h-10 text-blue-400" aria-label="Security shield" />
+              </div>
+            </motion.div>
             <h2 className="text-4xl md:text-6xl font-bold mb-6">
               Ready to Secure<br />Your Digital Assets?
             </h2>
             <p className="text-xl text-white/50 mb-12 max-w-2xl mx-auto">
               Join the world's most security-conscious enterprises. Let our experts identify your vulnerabilities before attackers do.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <motion.div 
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
               <Link href="/contact">
                 <Button
                   size="lg"
@@ -502,7 +731,7 @@ export default function Home() {
                   View Case Studies
                 </Button>
               </Link>
-            </div>
+            </motion.div>
           </AnimatedSection>
         </div>
       </section>
