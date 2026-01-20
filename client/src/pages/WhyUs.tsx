@@ -102,7 +102,7 @@ export default function WhyUs() {
   const heroY = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
 
   return (
-    <div className="bg-black min-h-screen">
+    <div className="bg-background min-h-screen">
       <section ref={heroRef} className="relative min-h-[70vh] flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 via-transparent to-transparent" />
@@ -129,7 +129,7 @@ export default function WhyUs() {
             className="text-5xl md:text-7xl font-bold tracking-tight mb-8"
           >
             The Secventra<br />
-            <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Advantage
             </span>
           </motion.h1>
@@ -151,11 +151,11 @@ export default function WhyUs() {
               <AnimatedSection key={advantage.title} delay={index * 0.1}>
                 <GlassCard className="p-8 h-full">
                   <div className="flex items-start justify-between mb-6">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center">
-                      <advantage.icon className="w-7 h-7 text-cyan-400" />
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                      <advantage.icon className="w-7 h-7 text-blue-400" />
                     </div>
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-cyan-400">{advantage.stat}</div>
+                      <div className="text-2xl font-bold text-blue-400">{advantage.stat}</div>
                       <div className="text-xs text-white/40">{advantage.statLabel}</div>
                     </div>
                   </div>
@@ -172,7 +172,7 @@ export default function WhyUs() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/5 to-transparent" />
         <div className="max-w-5xl mx-auto px-6 relative z-10">
           <AnimatedSection className="text-center mb-16">
-            <p className="text-cyan-400 font-medium mb-4 tracking-widest uppercase text-sm">
+            <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
               Comparison
             </p>
             <h2 className="text-4xl md:text-5xl font-bold">
@@ -188,7 +188,7 @@ export default function WhyUs() {
                     <tr className="border-b border-white/10">
                       <th className="text-left p-6 text-white/60 font-medium">Feature</th>
                       <th className="p-6 text-center">
-                        <div className="text-cyan-400 font-bold text-lg">Secventra</div>
+                        <div className="text-blue-400 font-bold text-lg">Secventra</div>
                       </th>
                       <th className="p-6 text-center">
                         <div className="text-white/40 font-medium">Others</div>
@@ -201,8 +201,8 @@ export default function WhyUs() {
                         <td className="p-6 text-white/70">{row.feature}</td>
                         <td className="p-6 text-center">
                           {row.secventra ? (
-                            <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center mx-auto">
-                              <Check className="w-5 h-5 text-cyan-400" />
+                            <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto">
+                              <Check className="w-5 h-5 text-blue-400" />
                             </div>
                           ) : (
                             <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center mx-auto">
@@ -234,7 +234,7 @@ export default function WhyUs() {
       <section className="py-32 relative">
         <div className="max-w-7xl mx-auto px-6">
           <AnimatedSection className="text-center mb-16">
-            <p className="text-cyan-400 font-medium mb-4 tracking-widest uppercase text-sm">
+            <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
               Testimonials
             </p>
             <h2 className="text-4xl md:text-5xl font-bold">
@@ -246,7 +246,7 @@ export default function WhyUs() {
             {testimonials.map((testimonial, index) => (
               <AnimatedSection key={index} delay={index * 0.1}>
                 <GlassCard className="p-8 h-full flex flex-col">
-                  <div className="text-4xl text-cyan-400/30 mb-4">"</div>
+                  <div className="text-4xl text-blue-400/30 mb-4">"</div>
                   <p className="text-white/70 leading-relaxed flex-1 mb-6">
                     {testimonial.quote}
                   </p>
@@ -262,7 +262,7 @@ export default function WhyUs() {
       </section>
 
       <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent" />
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
           <AnimatedSection>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -274,7 +274,7 @@ export default function WhyUs() {
             <Link href="/contact">
               <Button
                 size="lg"
-                className="bg-cyan-500 text-black font-semibold"
+                className="bg-blue-500 text-black font-semibold"
                 data-testid="button-why-us-cta"
               >
                 Start Your Assessment

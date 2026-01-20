@@ -71,11 +71,11 @@ export default function About() {
   const heroY = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
 
   return (
-    <div className="bg-black min-h-screen">
+    <div className="bg-background min-h-screen">
       <section ref={heroRef} className="relative min-h-[80vh] flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/10 via-transparent to-transparent" />
-          <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[128px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-amber-500/10 via-transparent to-transparent" />
+          <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-[128px]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_70%)]" />
         </div>
 
@@ -87,7 +87,7 @@ export default function About() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-emerald-400 font-medium mb-6 tracking-widest uppercase text-sm"
+            className="text-amber-400 font-medium mb-6 tracking-widest uppercase text-sm"
           >
             About Secventra
           </motion.p>
@@ -98,7 +98,7 @@ export default function About() {
             className="text-5xl md:text-7xl font-bold tracking-tight mb-8"
           >
             Securing Tomorrow,<br />
-            <span className="bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent">
               Today.
             </span>
           </motion.h1>
@@ -117,7 +117,7 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <AnimatedSection>
-              <p className="text-cyan-400 font-medium mb-4 tracking-widest uppercase text-sm">
+              <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
                 Our Mission
               </p>
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -141,7 +141,7 @@ export default function About() {
                     { value: "10K+", label: "Vulnerabilities Found" },
                   ].map((stat) => (
                     <div key={stat.label} className="text-center">
-                      <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent mb-2">
+                      <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-2">
                         {stat.value}
                       </div>
                       <div className="text-white/50 text-sm">{stat.label}</div>
@@ -155,10 +155,10 @@ export default function About() {
       </section>
 
       <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent" />
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <AnimatedSection className="text-center mb-20">
-            <p className="text-cyan-400 font-medium mb-4 tracking-widest uppercase text-sm">
+            <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
               Our Values
             </p>
             <h2 className="text-4xl md:text-5xl font-bold">
@@ -170,8 +170,8 @@ export default function About() {
             {values.map((value, index) => (
               <AnimatedSection key={value.title} delay={index * 0.1}>
                 <GlassCard className="p-8 h-full text-center">
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500/20 to-emerald-500/20 flex items-center justify-center mx-auto mb-6">
-                    <value.icon className="w-7 h-7 text-cyan-400" />
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-amber-500/20 flex items-center justify-center mx-auto mb-6">
+                    <value.icon className="w-7 h-7 text-blue-400" />
                   </div>
                   <h3 className="text-xl font-semibold mb-3">{value.title}</h3>
                   <p className="text-white/50">{value.description}</p>
@@ -185,7 +185,7 @@ export default function About() {
       <section className="py-32 relative">
         <div className="max-w-7xl mx-auto px-6">
           <AnimatedSection className="text-center mb-20">
-            <p className="text-cyan-400 font-medium mb-4 tracking-widest uppercase text-sm">
+            <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
               Our Journey
             </p>
             <h2 className="text-4xl md:text-5xl font-bold">
@@ -194,18 +194,18 @@ export default function About() {
           </AnimatedSection>
 
           <div className="relative">
-            <div className="absolute left-1/2 -translate-x-px top-0 bottom-0 w-px bg-gradient-to-b from-cyan-500/50 via-cyan-500/20 to-transparent hidden md:block" />
+            <div className="absolute left-1/2 -translate-x-px top-0 bottom-0 w-px bg-gradient-to-b from-blue-500/50 via-blue-500/20 to-transparent hidden md:block" />
             
             <div className="space-y-12">
               {milestones.map((milestone, index) => (
                 <AnimatedSection key={milestone.year} delay={index * 0.1}>
                   <div className={`flex flex-col md:flex-row items-center gap-8 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
                     <div className={`flex-1 ${index % 2 === 1 ? 'md:text-left' : 'md:text-right'}`}>
-                      <div className="text-cyan-400 font-mono text-sm mb-2">{milestone.year}</div>
+                      <div className="text-blue-400 font-mono text-sm mb-2">{milestone.year}</div>
                       <h3 className="text-2xl font-bold mb-2">{milestone.title}</h3>
                       <p className="text-white/50">{milestone.description}</p>
                     </div>
-                    <div className="w-4 h-4 rounded-full bg-cyan-500 relative z-10 ring-4 ring-black hidden md:block" />
+                    <div className="w-4 h-4 rounded-full bg-blue-500 relative z-10 ring-4 ring-black hidden md:block" />
                     <div className="flex-1" />
                   </div>
                 </AnimatedSection>
@@ -217,11 +217,11 @@ export default function About() {
 
       <section className="py-32 relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[150px]" />
+          <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[150px]" />
         </div>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <AnimatedSection className="text-center mb-20">
-            <p className="text-cyan-400 font-medium mb-4 tracking-widest uppercase text-sm">
+            <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
               Leadership
             </p>
             <h2 className="text-4xl md:text-5xl font-bold">
@@ -233,11 +233,11 @@ export default function About() {
             {leadership.map((person, index) => (
               <AnimatedSection key={person.name} delay={index * 0.1}>
                 <GlassCard className="p-6 text-center h-full">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-cyan-500/30 to-emerald-500/30 flex items-center justify-center mx-auto mb-4">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/30 to-amber-500/30 flex items-center justify-center mx-auto mb-4">
                     <Users className="w-10 h-10 text-white/50" />
                   </div>
                   <h3 className="text-lg font-semibold mb-1">{person.name}</h3>
-                  <p className="text-cyan-400 text-sm mb-3">{person.role}</p>
+                  <p className="text-blue-400 text-sm mb-3">{person.role}</p>
                   <p className="text-white/50 text-sm">{person.bio}</p>
                 </GlassCard>
               </AnimatedSection>
@@ -247,7 +247,7 @@ export default function About() {
       </section>
 
       <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent" />
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
           <AnimatedSection>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -260,7 +260,7 @@ export default function About() {
               <Link href="/contact">
                 <Button
                   size="lg"
-                  className="bg-cyan-500 text-black font-semibold"
+                  className="bg-blue-500 text-black font-semibold"
                   data-testid="button-about-contact"
                 >
                   Get in Touch

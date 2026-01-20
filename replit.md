@@ -49,10 +49,11 @@ shared/           # Shared code between client/server
 
 ### Design System
 The site follows strict design guidelines defined in `design_guidelines.md`:
-- Color palette: Black base with neon blue (#00E5FF) and green (#00FF94) accents
+- Color palette: Dark slate blue base with professional blue (#3b82f6) and gold (#f59e0b) accents
 - Typography: Large hero headlines (text-6xl to text-8xl), Inter font family
 - Glassmorphism: Semi-transparent panels with backdrop blur
 - Animations: Slow, smooth, luxury-feeling transitions
+- Enterprise aesthetic: Inspired by premium financial/tech brands
 
 ## External Dependencies
 

@@ -28,15 +28,15 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-black border-t border-white/5">
+    <footer className="bg-background border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           <div className="lg:col-span-1">
             <Link href="/">
               <div className="flex items-center gap-3 mb-6 cursor-pointer" data-testid="link-footer-logo">
                 <div className="relative">
-                  <Shield className="w-8 h-8 text-cyan-400" />
-                  <div className="absolute inset-0 bg-cyan-400/30 blur-lg" />
+                  <Shield className="w-8 h-8 text-blue-400" />
+                  <div className="absolute inset-0 bg-blue-400/30 blur-lg" />
                 </div>
                 <span className="text-xl font-bold tracking-tight">Secventra</span>
               </div>

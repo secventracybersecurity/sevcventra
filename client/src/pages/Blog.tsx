@@ -95,7 +95,7 @@ export default function Blog() {
   const heroY = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
 
   return (
-    <div className="bg-black min-h-screen">
+    <div className="bg-background min-h-screen">
       <section ref={heroRef} className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-rose-500/10 via-transparent to-transparent" />
@@ -122,7 +122,7 @@ export default function Blog() {
             className="text-5xl md:text-7xl font-bold tracking-tight mb-8"
           >
             Security<br />
-            <span className="bg-gradient-to-r from-cyan-400 to-rose-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 to-rose-400 bg-clip-text text-transparent">
               Insights
             </span>
           </motion.h1>
@@ -143,7 +143,7 @@ export default function Blog() {
             <GlassCard className="p-8 md:p-12" hover={false}>
               <div className="flex flex-col lg:flex-row gap-8">
                 <div className="lg:w-1/2">
-                  <div className="aspect-video bg-gradient-to-br from-rose-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center">
+                  <div className="aspect-video bg-gradient-to-br from-rose-500/20 to-blue-500/20 rounded-xl flex items-center justify-center">
                     <div className="text-6xl font-bold text-white/20">Featured</div>
                   </div>
                 </div>
@@ -171,7 +171,7 @@ export default function Blog() {
                     </span>
                   </div>
                   <Button
-                    className="bg-cyan-500 text-black font-semibold w-fit"
+                    className="bg-blue-500 text-black font-semibold w-fit"
                     data-testid="button-read-featured"
                   >
                     Read Article
@@ -194,7 +194,7 @@ export default function Blog() {
                   variant={category === "All" ? "default" : "ghost"}
                   className={`rounded-full ${
                     category === "All"
-                      ? "bg-cyan-500 text-black"
+                      ? "bg-blue-500 text-black"
                       : "bg-white/5 text-white/60"
                   }`}
                   data-testid={`button-category-${category.toLowerCase().replace(/\s+/g, "-")}`}
@@ -246,7 +246,7 @@ export default function Blog() {
       </section>
 
       <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent" />
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
           <AnimatedSection>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
@@ -259,11 +259,11 @@ export default function Blog() {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:border-cyan-500 transition-colors"
+                className="flex-1 px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:border-blue-500 transition-colors"
                 data-testid="input-newsletter-email"
               />
               <Button
-                className="bg-cyan-500 text-black font-semibold px-6"
+                className="bg-blue-500 text-black font-semibold px-6"
                 data-testid="button-subscribe"
               >
                 Subscribe

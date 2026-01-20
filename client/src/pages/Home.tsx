@@ -78,12 +78,12 @@ export default function Home() {
   const heroY = useTransform(scrollYProgress, [0, 0.5], [0, -50]);
 
   return (
-    <div className="bg-black min-h-screen">
+    <div className="bg-background min-h-screen">
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/10 via-transparent to-transparent" />
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-[128px] animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[128px] animate-pulse" style={{ animationDelay: "1s" }} />
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-transparent to-transparent" />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[128px] animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-[128px] animate-pulse" style={{ animationDelay: "1s" }} />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_70%)]" />
         </div>
 
@@ -100,7 +100,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-cyan-400 font-medium mb-6 tracking-widest uppercase text-sm"
+              className="text-blue-400 font-medium mb-6 tracking-widest uppercase text-sm"
             >
               Elite Cybersecurity
             </motion.p>
@@ -111,7 +111,7 @@ export default function Home() {
               className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 leading-[0.9]"
             >
               <span className="block">Redefining</span>
-              <span className="block bg-gradient-to-r from-cyan-400 via-cyan-300 to-emerald-400 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-blue-400 via-blue-300 to-amber-400 bg-clip-text text-transparent">
                 Cybersecurity
               </span>
               <span className="block">Excellence.</span>
@@ -133,7 +133,7 @@ export default function Home() {
               <Link href="/contact">
                 <Button
                   size="lg"
-                  className="bg-cyan-500 text-black font-semibold"
+                  className="bg-blue-500 text-black font-semibold"
                   data-testid="button-hero-contact"
                 >
                   Start Your Assessment
@@ -174,7 +174,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-950 to-black" />
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <AnimatedSection className="text-center mb-20">
-            <p className="text-cyan-400 font-medium mb-4 tracking-widest uppercase text-sm">
+            <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
               Trusted by Industry Leaders
             </p>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -198,11 +198,11 @@ export default function Home() {
 
       <section className="py-32 relative">
         <div className="absolute inset-0">
-          <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[150px]" />
+          <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[150px]" />
         </div>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <AnimatedSection className="text-center mb-20">
-            <p className="text-cyan-400 font-medium mb-4 tracking-widest uppercase text-sm">
+            <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
               Our Services
             </p>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -217,8 +217,8 @@ export default function Home() {
             {services.map((service, index) => (
               <AnimatedSection key={service.title} delay={index * 0.1}>
                 <GlassCard className="p-8 h-full cursor-pointer">
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500/20 to-emerald-500/20 flex items-center justify-center mb-6">
-                    <service.icon className="w-7 h-7 text-cyan-400" />
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-amber-500/20 flex items-center justify-center mb-6">
+                    <service.icon className="w-7 h-7 text-blue-400" />
                   </div>
                   <h3 className="text-xl font-semibold mb-3 text-white">
                     {service.title}
@@ -248,13 +248,13 @@ export default function Home() {
       </section>
 
       <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-emerald-500/5" />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-amber-500/5" />
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <AnimatedSection key={stat.label} delay={index * 0.15}>
                 <div className="text-center">
-                  <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent mb-3">
+                  <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-3">
                     {stat.value}
                   </div>
                   <div className="text-white/50 text-sm uppercase tracking-wider">
@@ -269,12 +269,12 @@ export default function Home() {
 
       <section className="py-32 relative">
         <div className="absolute inset-0">
-          <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-[150px]" />
+          <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[150px]" />
         </div>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <AnimatedSection>
-              <p className="text-cyan-400 font-medium mb-4 tracking-widest uppercase text-sm">
+              <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
                 Why Secventra
               </p>
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -291,8 +291,8 @@ export default function Home() {
                 ].map((item, index) => (
                   <AnimatedText key={item.title} delay={index * 0.1}>
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
-                        <item.icon className="w-6 h-6 text-cyan-400" />
+                      <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                        <item.icon className="w-6 h-6 text-blue-400" />
                       </div>
                       <div>
                         <h4 className="font-semibold mb-1">{item.title}</h4>
@@ -308,9 +308,9 @@ export default function Home() {
               <GlassCard className="p-1 overflow-hidden" hover={false}>
                 <div className="aspect-square rounded-xl bg-gradient-to-br from-gray-900 to-black flex items-center justify-center relative overflow-hidden">
                   <div className="absolute inset-0 bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/20 rounded-full blur-[80px]" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500/20 rounded-full blur-[80px]" />
                   <div className="relative text-center p-8">
-                    <Shield className="w-24 h-24 text-cyan-400 mx-auto mb-6" />
+                    <Shield className="w-24 h-24 text-blue-400 mx-auto mb-6" />
                     <p className="text-2xl font-bold mb-2">Enterprise Grade</p>
                     <p className="text-white/50">Security Solutions</p>
                   </div>
@@ -322,7 +322,7 @@ export default function Home() {
       </section>
 
       <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent" />
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
           <AnimatedSection>
             <h2 className="text-4xl md:text-6xl font-bold mb-6">
@@ -335,7 +335,7 @@ export default function Home() {
               <Link href="/contact">
                 <Button
                   size="lg"
-                  className="bg-cyan-500 text-black font-semibold animate-glow-pulse"
+                  className="bg-blue-500 text-black font-semibold animate-glow-pulse"
                   data-testid="button-cta-contact"
                 >
                   Schedule a Consultation

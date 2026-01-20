@@ -19,7 +19,7 @@ const caseStudies = [
       { label: "Compliance Score", value: "99%" },
     ],
     testimonial: "Secventra's thorough approach helped us achieve our strictest compliance requirements while dramatically improving our security posture.",
-    gradient: "from-blue-500/20 to-cyan-500/20",
+    gradient: "from-blue-500/20 to-blue-500/20",
   },
   {
     id: 2,
@@ -34,7 +34,7 @@ const caseStudies = [
       { label: "Devices Secured", value: "10K+" },
     ],
     testimonial: "Their expertise in healthcare security is unparalleled. They understood our unique challenges and delivered actionable results.",
-    gradient: "from-emerald-500/20 to-teal-500/20",
+    gradient: "from-amber-500/20 to-blue-500/20",
   },
   {
     id: 3,
@@ -79,7 +79,7 @@ export default function CaseStudies() {
   const heroY = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
 
   return (
-    <div className="bg-black min-h-screen">
+    <div className="bg-background min-h-screen">
       <section ref={heroRef} className="relative min-h-[70vh] flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-orange-500/10 via-transparent to-transparent" />
@@ -106,7 +106,7 @@ export default function CaseStudies() {
             className="text-5xl md:text-7xl font-bold tracking-tight mb-8"
           >
             Real Results,<br />
-            <span className="bg-gradient-to-r from-cyan-400 to-orange-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 to-orange-400 bg-clip-text text-transparent">
               Real Impact
             </span>
           </motion.h1>
@@ -132,7 +132,7 @@ export default function CaseStudies() {
                   <div className="flex flex-col lg:flex-row gap-12">
                     <div className="flex-1">
                       <div className="flex items-center gap-4 mb-6">
-                        <span className="text-cyan-400 font-mono text-sm">0{index + 1}</span>
+                        <span className="text-blue-400 font-mono text-sm">0{index + 1}</span>
                         <span className="text-white/40 text-sm uppercase tracking-wider">{study.industry}</span>
                       </div>
                       
@@ -148,7 +148,7 @@ export default function CaseStudies() {
                         </div>
                         
                         <div>
-                          <div className="flex items-center gap-2 text-cyan-400 mb-2">
+                          <div className="flex items-center gap-2 text-blue-400 mb-2">
                             <Shield className="w-4 h-4" />
                             <span className="text-sm font-medium uppercase tracking-wider">Solution</span>
                           </div>
@@ -163,14 +163,14 @@ export default function CaseStudies() {
                     </div>
 
                     <div className="lg:w-80 space-y-4">
-                      <div className="flex items-center gap-2 text-emerald-400 mb-4">
+                      <div className="flex items-center gap-2 text-amber-400 mb-4">
                         <TrendingUp className="w-4 h-4" />
                         <span className="text-sm font-medium uppercase tracking-wider">Results</span>
                       </div>
                       
                       {study.results.map((result) => (
                         <div key={result.label} className="p-4 bg-white/5 rounded-xl border border-white/5">
-                          <div className="text-2xl font-bold text-cyan-400 mb-1">{result.value}</div>
+                          <div className="text-2xl font-bold text-blue-400 mb-1">{result.value}</div>
                           <div className="text-white/40 text-sm">{result.label}</div>
                         </div>
                       ))}
@@ -184,7 +184,7 @@ export default function CaseStudies() {
       </section>
 
       <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent" />
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
           <AnimatedSection>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -196,7 +196,7 @@ export default function CaseStudies() {
             <Link href="/contact">
               <Button
                 size="lg"
-                className="bg-cyan-500 text-black font-semibold"
+                className="bg-blue-500 text-black font-semibold"
                 data-testid="button-case-studies-cta"
               >
                 Start Your Journey

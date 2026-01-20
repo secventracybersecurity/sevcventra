@@ -40,7 +40,7 @@ export function Navigation() {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? "bg-black/80 backdrop-blur-md border-b border-white/5"
+            ? "bg-background/80 backdrop-blur-md border-b border-white/5"
             : "bg-transparent"
         }`}
       >
@@ -53,8 +53,8 @@ export function Navigation() {
                 data-testid="link-logo"
               >
                 <div className="relative">
-                  <Shield className="w-8 h-8 text-cyan-400" />
-                  <div className="absolute inset-0 bg-cyan-400/30 blur-lg" />
+                  <Shield className="w-8 h-8 text-blue-400" />
+                  <div className="absolute inset-0 bg-blue-400/30 blur-lg" />
                 </div>
                 <span className="text-xl font-bold tracking-tight">
                   Secventra
@@ -69,7 +69,7 @@ export function Navigation() {
                     variant="ghost"
                     className={`text-sm font-medium ${
                       location === link.href
-                        ? "text-cyan-400"
+                        ? "text-blue-400"
                         : "text-white/70"
                     }`}
                     data-testid={`link-nav-${link.label.toLowerCase().replace(" ", "-")}`}
@@ -83,7 +83,7 @@ export function Navigation() {
             <div className="flex items-center gap-4">
               <Link href="/contact">
                 <Button
-                  className="hidden sm:flex bg-cyan-500 text-black font-semibold"
+                  className="hidden sm:flex bg-blue-500 text-black font-semibold"
                   data-testid="button-get-started"
                 >
                   Get Started
@@ -113,7 +113,7 @@ export function Navigation() {
             className="fixed inset-0 z-40 lg:hidden"
           >
             <div
-              className="absolute inset-0 bg-black/90 backdrop-blur-lg"
+              className="absolute inset-0 bg-background/90 backdrop-blur-lg"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <motion.nav
@@ -134,7 +134,7 @@ export function Navigation() {
                       <span
                         className={`block py-3 text-2xl font-medium ${
                           location === link.href
-                            ? "text-cyan-400"
+                            ? "text-blue-400"
                             : "text-white/70"
                         }`}
                         data-testid={`link-mobile-${link.label.toLowerCase().replace(" ", "-")}`}

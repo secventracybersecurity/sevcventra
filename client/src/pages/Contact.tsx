@@ -111,11 +111,11 @@ export default function Contact() {
   };
 
   return (
-    <div className="bg-black min-h-screen">
+    <div className="bg-background min-h-screen">
       <section ref={heroRef} className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-teal-500/10 via-transparent to-transparent" />
-          <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-teal-500/10 rounded-full blur-[128px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-transparent to-transparent" />
+          <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-[128px]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_70%)]" />
         </div>
 
@@ -127,7 +127,7 @@ export default function Contact() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-teal-400 font-medium mb-6 tracking-widest uppercase text-sm"
+            className="text-blue-400 font-medium mb-6 tracking-widest uppercase text-sm"
             data-testid="text-contact-subtitle"
           >
             Contact Us
@@ -140,7 +140,7 @@ export default function Contact() {
             data-testid="text-contact-title"
           >
             Let's Secure<br />
-            <span className="bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 to-blue-400 bg-clip-text text-transparent">
               Your Future
             </span>
           </motion.h1>
@@ -171,11 +171,11 @@ export default function Contact() {
                 {contactInfo.map((item, index) => (
                   <AnimatedSection key={item.title} delay={index * 0.1}>
                     <GlassCard className="p-6" data-testid={`card-contact-${item.title.toLowerCase()}`}>
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-teal-500/20 flex items-center justify-center mb-4">
-                        <item.icon className="w-6 h-6 text-cyan-400" />
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-500/20 flex items-center justify-center mb-4">
+                        <item.icon className="w-6 h-6 text-blue-400" />
                       </div>
                       <h3 className="font-semibold mb-1">{item.title}</h3>
-                      <p className="text-cyan-400 mb-1" data-testid={`text-${item.title.toLowerCase()}-value`}>{item.value}</p>
+                      <p className="text-blue-400 mb-1" data-testid={`text-${item.title.toLowerCase()}-value`}>{item.value}</p>
                       <p className="text-white/40 text-sm">{item.description}</p>
                     </GlassCard>
                   </AnimatedSection>
@@ -187,8 +187,8 @@ export default function Contact() {
               <GlassCard className="p-8" hover={false}>
                 {contactMutation.isSuccess ? (
                   <div className="text-center py-12" data-testid="container-success-message">
-                    <div className="w-16 h-16 rounded-full bg-cyan-500/20 flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle className="w-8 h-8 text-cyan-400" />
+                    <div className="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle className="w-8 h-8 text-blue-400" />
                     </div>
                     <h3 className="text-2xl font-bold mb-4" data-testid="text-success-title">Message Sent!</h3>
                     <p className="text-white/60" data-testid="text-success-description">
@@ -209,7 +209,7 @@ export default function Contact() {
                                 <Input
                                   {...field}
                                   placeholder="John Smith"
-                                  className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-cyan-500"
+                                  className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-blue-500"
                                   data-testid="input-name"
                                 />
                               </FormControl>
@@ -228,7 +228,7 @@ export default function Contact() {
                                   {...field}
                                   type="email"
                                   placeholder="john@company.com"
-                                  className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-cyan-500"
+                                  className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-blue-500"
                                   data-testid="input-email"
                                 />
                               </FormControl>
@@ -248,7 +248,7 @@ export default function Contact() {
                               <Input
                                 {...field}
                                 placeholder="Your Company Name"
-                                className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-cyan-500"
+                                className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-blue-500"
                                 data-testid="input-company"
                               />
                             </FormControl>
@@ -266,7 +266,7 @@ export default function Contact() {
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger 
-                                  className="bg-white/5 border-white/10 text-white focus:border-cyan-500"
+                                  className="bg-white/5 border-white/10 text-white focus:border-blue-500"
                                   data-testid="select-service"
                                 >
                                   <SelectValue placeholder="Select a service" />
@@ -298,7 +298,7 @@ export default function Contact() {
                                 {...field}
                                 rows={5}
                                 placeholder="Tell us about your security needs..."
-                                className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-cyan-500 resize-none"
+                                className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-blue-500 resize-none"
                                 data-testid="textarea-message"
                               />
                             </FormControl>
@@ -310,7 +310,7 @@ export default function Contact() {
                       <Button
                         type="submit"
                         disabled={contactMutation.isPending}
-                        className="w-full bg-cyan-500 text-black font-semibold py-6 text-lg"
+                        className="w-full bg-blue-500 text-black font-semibold py-6 text-lg"
                         data-testid="button-submit"
                       >
                         {contactMutation.isPending ? (
@@ -344,9 +344,9 @@ export default function Contact() {
             <GlassCard className="p-1 overflow-hidden" hover={false}>
               <div className="aspect-[21/9] rounded-xl bg-gradient-to-br from-gray-900 to-black flex items-center justify-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/10 rounded-full blur-[80px]" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px]" />
                 <div className="relative text-center" data-testid="container-map">
-                  <MapPin className="w-16 h-16 text-cyan-400 mx-auto mb-4" />
+                  <MapPin className="w-16 h-16 text-blue-400 mx-auto mb-4" />
                   <p className="text-2xl font-bold mb-2" data-testid="text-location">San Francisco, CA</p>
                   <p className="text-white/50">Global Operations • Remote Team</p>
                 </div>

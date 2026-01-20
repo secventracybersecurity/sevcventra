@@ -153,7 +153,7 @@ function JobCard({ job }: { job: typeof openPositions[0] }) {
           <ul className="space-y-2 mb-6">
             {job.requirements.map((req, index) => (
               <li key={index} className="flex items-start gap-3 text-white/60">
-                <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-2 flex-shrink-0" />
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-2 flex-shrink-0" />
                 {req}
               </li>
             ))}
@@ -161,7 +161,7 @@ function JobCard({ job }: { job: typeof openPositions[0] }) {
 
           <Link href="/contact">
             <Button
-              className="bg-cyan-500 text-black font-semibold"
+              className="bg-blue-500 text-black font-semibold"
               data-testid={`button-apply-${job.id}`}
             >
               Apply Now
@@ -185,7 +185,7 @@ export default function Careers() {
   const heroY = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
 
   return (
-    <div className="bg-black min-h-screen">
+    <div className="bg-background min-h-screen">
       <section ref={heroRef} className="relative min-h-[70vh] flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/10 via-transparent to-transparent" />
@@ -212,7 +212,7 @@ export default function Careers() {
             className="text-5xl md:text-7xl font-bold tracking-tight mb-8"
           >
             Build the Future of<br />
-            <span className="bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
               Cybersecurity
             </span>
           </motion.h1>
@@ -240,8 +240,8 @@ export default function Careers() {
             {benefits.map((benefit, index) => (
               <AnimatedSection key={benefit.title} delay={index * 0.1}>
                 <GlassCard className="p-6 text-center h-full">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-indigo-500/20 flex items-center justify-center mx-auto mb-4">
-                    <benefit.icon className="w-6 h-6 text-cyan-400" />
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center mx-auto mb-4">
+                    <benefit.icon className="w-6 h-6 text-blue-400" />
                   </div>
                   <h3 className="font-semibold mb-2">{benefit.title}</h3>
                   <p className="text-white/50 text-sm">{benefit.description}</p>
@@ -256,7 +256,7 @@ export default function Careers() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-indigo-500/5 to-transparent" />
         <div className="max-w-4xl mx-auto px-6 relative z-10">
           <AnimatedSection className="text-center mb-16">
-            <p className="text-cyan-400 font-medium mb-4 tracking-widest uppercase text-sm">
+            <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
               Open Positions
             </p>
             <h2 className="text-3xl md:text-4xl font-bold">Current Openings</h2>
@@ -284,7 +284,7 @@ export default function Careers() {
             <Link href="/contact">
               <Button
                 size="lg"
-                className="bg-cyan-500 text-black font-semibold"
+                className="bg-blue-500 text-black font-semibold"
                 data-testid="button-careers-contact"
               >
                 Get in Touch
