@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Shield } from "lucide-react";
+import { Menu, X, Shield, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
@@ -28,7 +28,9 @@ export function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Scroll to top and close mobile menu on route change
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setIsMobileMenuOpen(false);
   }, [location]);
 
@@ -106,45 +108,88 @@ export function Navigation() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
             className="fixed inset-0 z-40 lg:hidden"
           >
             <div
-              className="absolute inset-0 bg-background/90 backdrop-blur-lg"
+              className="absolute inset-0 bg-background/95 backdrop-blur-xl"
               onClick={() => setIsMobileMenuOpen(false)}
             />
+            <div className="absolute top-20 left-6 w-32 h-32 bg-blue-500/20 rounded-full blur-[80px]" />
+            <div className="absolute bottom-40 right-10 w-40 h-40 bg-amber-500/10 rounded-full blur-[100px]" />
             <motion.nav
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ delay: 0.1 }}
-              className="relative pt-24 px-6"
+              className="relative pt-24 px-6 h-full overflow-y-auto"
             >
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1">
                 {navLinks.map((link, index) => (
                   <motion.div
                     key={link.href}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + index * 0.05 }}
+                    initial={{ opacity: 0, x: -30, scale: 0.95 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    transition={{ 
+                      delay: 0.05 + index * 0.04,
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 25
+                    }}
                   >
                     <Link href={link.href}>
-                      <span
-                        className={`block py-3 text-2xl font-medium ${
+                      <motion.div
+                        whileTap={{ scale: 0.98, x: 5 }}
+                        className={`flex items-center justify-between py-4 px-4 rounded-xl transition-colors ${
                           location === link.href
-                            ? "text-blue-400"
-                            : "text-white/70"
+                            ? "bg-blue-500/20 border border-blue-500/30"
+                            : "active:bg-white/5"
                         }`}
                         data-testid={`link-mobile-${link.label.toLowerCase().replace(" ", "-")}`}
+                        aria-current={location === link.href ? "page" : undefined}
                       >
-                        {link.label}
-                      </span>
+                        <span
+                          className={`text-xl font-semibold ${
+                            location === link.href
+                              ? "text-blue-400"
+                              : "text-white/80"
+                          }`}
+                        >
+                          {link.label}
+                        </span>
+                        <ChevronRight 
+                          className={`w-5 h-5 ${
+                            location === link.href
+                              ? "text-blue-400"
+                              : "text-white/40"
+                          }`}
+                        />
+                      </motion.div>
                     </Link>
                   </motion.div>
                 ))}
               </div>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="mt-8 px-4"
+              >
+                <Link href="/contact">
+                  <Button
+                    className="w-full bg-blue-500 text-black font-semibold h-14 text-lg"
+                    data-testid="button-mobile-get-started"
+                  >
+                    Get Started Today
+                  </Button>
+                </Link>
+                <p className="text-center text-sm text-white/40 mt-4">
+                  Enterprise Security Solutions
+                </p>
+              </motion.div>
             </motion.nav>
           </motion.div>
         )}
