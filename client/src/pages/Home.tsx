@@ -422,83 +422,71 @@ function MarqueeBand() {
   );
 }
 
-// Premium client logos section
+// Premium client logos section - compact for mobile
 function ClientLogosSection() {
   return (
-    <section className="py-20 relative overflow-hidden border-b border-white/5">
+    <section className="py-10 md:py-20 relative overflow-hidden border-b border-white/5">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/[0.02] to-transparent" />
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12"
+          className="text-center mb-6 md:mb-12"
         >
-          <p className="text-white/40 text-sm uppercase tracking-widest mb-4">
+          <p className="text-white/40 text-xs md:text-sm uppercase tracking-widest mb-2">
             Trusted by industry leaders
           </p>
-          <h3 className="text-2xl md:text-3xl font-semibold text-white/80">
+          <h3 className="text-lg md:text-3xl font-semibold text-white/80">
             Protecting the World's Most Valuable Enterprises
           </h3>
         </motion.div>
         
-        <div className="grid grid-cols-4 md:grid-cols-8 gap-4 md:gap-6">
+        <div className="grid grid-cols-4 md:grid-cols-8 gap-2 md:gap-6">
           {clientLogos.map((logo, index) => (
             <motion.div
               key={logo.name}
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
+              transition={{ duration: 0.3, delay: index * 0.02 }}
               className="group"
             >
               <div 
-                className="aspect-square flex items-center justify-center rounded-xl bg-white/[0.03] border border-white/[0.06] transition-all duration-300 group-hover:bg-white/[0.06] group-hover:border-white/10"
+                className="aspect-square flex items-center justify-center rounded-lg md:rounded-xl bg-white/[0.03] border border-white/[0.06] transition-all duration-300 group-hover:bg-white/[0.06] group-hover:border-white/10"
                 data-testid={`logo-${logo.name.toLowerCase().replace(/\s+/g, '-')}`}
               >
-                <div className="text-center">
-                  <span className="text-lg md:text-xl font-bold text-white/50 group-hover:text-white/80 transition-colors">
-                    {logo.abbr}
-                  </span>
-                  <p className="text-[10px] text-white/30 mt-1 hidden md:block group-hover:text-white/50 transition-colors">
-                    {logo.name}
-                  </p>
-                </div>
+                <span className="text-sm md:text-xl font-bold text-white/50 group-hover:text-white/80 transition-colors">
+                  {logo.abbr}
+                </span>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Industry Recognition */}
+        {/* Industry Recognition - horizontal scroll on mobile */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-16 pt-12 border-t border-white/5"
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mt-8 md:mt-16 pt-6 md:pt-12 border-t border-white/5"
         >
-          <p className="text-center text-white/40 text-sm uppercase tracking-widest mb-8">
-            Industry Recognition
-          </p>
-          <div className="flex flex-wrap justify-center gap-8 md:gap-16">
+          <div className="grid grid-cols-4 gap-2 md:flex md:flex-wrap md:justify-center md:gap-16">
             {recognitions.map((item, index) => (
-              <motion.div
+              <div
                 key={item.title}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
                 className="text-center"
                 data-testid={`recognition-${item.title.toLowerCase().replace(/\s+/g, '-')}`}
               >
-                <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent">
+                <div className="text-sm md:text-3xl font-bold bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent">
                   {item.title}
                 </div>
-                <p className="text-xs md:text-sm text-white/40 mt-1">
+                <p className="text-[9px] md:text-sm text-white/40 mt-0.5 md:mt-1 leading-tight">
                   {item.subtitle}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </motion.div>
@@ -691,49 +679,48 @@ export default function Home() {
       {/* Client Logos & Recognition */}
       <ClientLogosSection />
 
-      {/* Stats Section */}
-      <section className="py-24 relative overflow-hidden">
+      {/* Stats Section - compact on mobile */}
+      <section className="py-12 md:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-amber-500/5" />
-        <FloatingParticles />
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
             <AnimatedSection delay={0}>
               <div className="text-center">
-                <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-3">
+                <div className="text-3xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-1 md:mb-3">
                   <AnimatedCounter value={15} suffix="+" />
                 </div>
-                <div className="text-white/50 text-sm uppercase tracking-wider">
+                <div className="text-white/50 text-xs md:text-sm uppercase tracking-wider">
                   Years Experience
                 </div>
               </div>
             </AnimatedSection>
-            <AnimatedSection delay={0.15}>
+            <AnimatedSection delay={0.1}>
               <div className="text-center">
-                <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-3">
+                <div className="text-3xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-1 md:mb-3">
                   <AnimatedCounter value={500} suffix="+" />
                 </div>
-                <div className="text-white/50 text-sm uppercase tracking-wider">
-                  Enterprises Protected
+                <div className="text-white/50 text-xs md:text-sm uppercase tracking-wider">
+                  Enterprises
+                </div>
+              </div>
+            </AnimatedSection>
+            <AnimatedSection delay={0.2}>
+              <div className="text-center">
+                <div className="text-3xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-1 md:mb-3">
+                  <AnimatedCounter value={10000} suffix="+" />
+                </div>
+                <div className="text-white/50 text-xs md:text-sm uppercase tracking-wider">
+                  Vulnerabilities
                 </div>
               </div>
             </AnimatedSection>
             <AnimatedSection delay={0.3}>
               <div className="text-center">
-                <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-3">
-                  <AnimatedCounter value={10000} suffix="+" />
+                <div className="text-3xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-1 md:mb-3">
+                  99.9<span className="text-xl md:text-3xl">%</span>
                 </div>
-                <div className="text-white/50 text-sm uppercase tracking-wider">
-                  Vulnerabilities Found
-                </div>
-              </div>
-            </AnimatedSection>
-            <AnimatedSection delay={0.45}>
-              <div className="text-center">
-                <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-3">
-                  99.9<span className="text-3xl">%</span>
-                </div>
-                <div className="text-white/50 text-sm uppercase tracking-wider">
-                  Client Retention
+                <div className="text-white/50 text-xs md:text-sm uppercase tracking-wider">
+                  Retention
                 </div>
               </div>
             </AnimatedSection>
@@ -741,35 +728,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section className="py-32 relative">
+      {/* Services Section - compact on mobile */}
+      <section className="py-16 md:py-32 relative">
         <div className="absolute inset-0">
           <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[150px]" />
         </div>
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <AnimatedSection className="text-center mb-20">
-            <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+          <AnimatedSection className="text-center mb-10 md:mb-20">
+            <p className="text-blue-400 font-medium mb-2 md:mb-4 tracking-widest uppercase text-xs md:text-sm">
               Our Services
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Advanced Threat<br />Detection & Protection
+            <h2 className="text-2xl md:text-5xl font-bold mb-3 md:mb-6">
+              Advanced Threat Detection
             </h2>
-            <p className="text-xl text-white/50 max-w-2xl mx-auto">
+            <p className="text-sm md:text-xl text-white/50 max-w-2xl mx-auto">
               From application security to red team operations, we cover every attack surface.
             </p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
             {services.map((service, index) => (
-              <AnimatedSection key={service.title} delay={index * 0.1}>
-                <GlassCard className="p-8 h-full">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-amber-500/10 flex items-center justify-center mb-6">
-                    <service.icon className="w-8 h-8 text-blue-400" />
+              <AnimatedSection key={service.title} delay={index * 0.05}>
+                <GlassCard className="p-4 md:p-8 h-full">
+                  <div className="w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-500/20 to-amber-500/10 flex items-center justify-center mb-3 md:mb-6">
+                    <service.icon className="w-5 h-5 md:w-8 md:h-8 text-blue-400" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-3 text-white">
+                  <h3 className="text-sm md:text-xl font-semibold mb-1 md:mb-3 text-white">
                     {service.title}
                   </h3>
-                  <p className="text-white/50 leading-relaxed">
+                  <p className="text-xs md:text-base text-white/50 leading-relaxed hidden md:block">
                     {service.description}
                   </p>
                 </GlassCard>
@@ -793,37 +780,37 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section className="py-32 relative">
+      {/* Why Choose Us Section - compact on mobile */}
+      <section className="py-16 md:py-32 relative">
         <div className="absolute inset-0">
           <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[150px]" />
         </div>
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-center">
             <AnimatedSection>
-              <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
+              <p className="text-blue-400 font-medium mb-2 md:mb-4 tracking-widest uppercase text-xs md:text-sm">
                 Why Secventra
               </p>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Driving Growth with<br />Our Expertise
+              <h2 className="text-2xl md:text-5xl font-bold mb-3 md:mb-6">
+                Driving Growth with Our Expertise
               </h2>
-              <p className="text-xl text-white/50 mb-8 leading-relaxed">
-                Our team of elite security researchers brings decades of combined experience in finding and exploiting vulnerabilities that others miss.
+              <p className="text-sm md:text-xl text-white/50 mb-4 md:mb-8 leading-relaxed">
+                Our team of elite security researchers brings decades of combined experience.
               </p>
-              <div className="space-y-6">
+              <div className="space-y-3 md:space-y-6">
                 {[
-                  { icon: Lock, title: "Your Digital Shield", description: "Comprehensive protection for all digital assets" },
-                  { icon: Eye, title: "Experts in Security", description: "Industry-leading specialists on your side" },
-                  { icon: Zap, title: "Rapid Response", description: "24/7 monitoring and incident response" },
+                  { icon: Lock, title: "Your Digital Shield", description: "Comprehensive protection" },
+                  { icon: Eye, title: "Experts in Security", description: "Industry-leading specialists" },
+                  { icon: Zap, title: "Rapid Response", description: "24/7 monitoring" },
                 ].map((item, index) => (
-                  <AnimatedText key={item.title} delay={index * 0.1}>
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-amber-500/10 flex items-center justify-center flex-shrink-0">
-                        <item.icon className="w-6 h-6 text-blue-400" />
+                  <AnimatedText key={item.title} delay={index * 0.05}>
+                    <div className="flex items-center gap-3 md:gap-4">
+                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-gradient-to-br from-blue-500/20 to-amber-500/10 flex items-center justify-center flex-shrink-0">
+                        <item.icon className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
                       </div>
                       <div>
-                        <h4 className="font-semibold mb-1 text-white">{item.title}</h4>
-                        <p className="text-white/50">{item.description}</p>
+                        <h4 className="text-sm md:text-base font-semibold text-white">{item.title}</h4>
+                        <p className="text-xs md:text-sm text-white/50">{item.description}</p>
                       </div>
                     </div>
                   </AnimatedText>
@@ -831,7 +818,7 @@ export default function Home() {
               </div>
             </AnimatedSection>
 
-            <AnimatedSection delay={0.3}>
+            <AnimatedSection delay={0.2} className="hidden md:block">
               <GlassCard className="p-1 overflow-visible" hover={false}>
                 <div className="aspect-[4/3] rounded-xl relative overflow-hidden" data-testid="image-datacenter">
                   <img 
@@ -860,22 +847,43 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-32 relative overflow-hidden">
+      {/* Testimonials Section - show only 1 on mobile */}
+      <section className="py-16 md:py-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent" />
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <AnimatedSection className="text-center mb-16">
-            <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+          <AnimatedSection className="text-center mb-8 md:mb-16">
+            <p className="text-blue-400 font-medium mb-2 md:mb-4 tracking-widest uppercase text-xs md:text-sm">
               Client Testimonials
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold">
-              Unmatched Service,<br />Unbreakable Protection
+            <h2 className="text-2xl md:text-5xl font-bold">
+              Unmatched Service & Protection
             </h2>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            {testimonials.slice(0, 1).map((testimonial, index) => (
+              <AnimatedSection key={index} delay={index * 0.1} className="md:hidden">
+                <GlassCard className="p-5 h-full flex flex-col relative">
+                  <Quote className="w-8 h-8 text-blue-400/20 mb-3" />
+                  <p className="text-white/70 leading-relaxed flex-1 mb-4 text-sm">
+                    "{testimonial.quote}"
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <Avatar className="w-10 h-10 bg-gradient-to-br from-blue-500/30 to-amber-500/20">
+                      <AvatarFallback className="bg-transparent text-sm font-bold text-white">
+                        {testimonial.author[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="text-sm font-semibold text-white">{testimonial.author}</div>
+                      <div className="text-white/40 text-xs">{testimonial.role}</div>
+                    </div>
+                  </div>
+                </GlassCard>
+              </AnimatedSection>
+            ))}
             {testimonials.map((testimonial, index) => (
-              <AnimatedSection key={index} delay={index * 0.1}>
+              <AnimatedSection key={index} delay={index * 0.1} className="hidden md:block">
                 <GlassCard className="p-8 h-full flex flex-col relative">
                   <Quote className="w-10 h-10 text-blue-400/20 mb-4" />
                   <p className="text-white/70 leading-relaxed flex-1 mb-6 text-lg">
@@ -899,8 +907,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-32 relative overflow-hidden">
+      {/* Team Section - hidden on mobile for less scroll */}
+      <section className="hidden md:block py-32 relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[120px]" />
         </div>
@@ -970,37 +978,47 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-32 relative">
-        <FloatingParticles />
-        <div className="max-w-4xl mx-auto px-6 relative z-10">
-          <AnimatedSection className="text-center mb-16">
-            <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
-              How Do We Operate?
+      {/* FAQ Section - compact on mobile, fewer items */}
+      <section className="py-16 md:py-32 relative">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
+          <AnimatedSection className="text-center mb-8 md:mb-16">
+            <p className="text-blue-400 font-medium mb-2 md:mb-4 tracking-widest uppercase text-xs md:text-sm">
+              FAQ
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold">
-              Frequently Asked<br />Questions
+            <h2 className="text-2xl md:text-5xl font-bold">
+              Frequently Asked Questions
             </h2>
           </AnimatedSection>
 
-          <AnimatedSection delay={0.2}>
-            <GlassCard className="p-8" hover={false}>
+          <AnimatedSection delay={0.1}>
+            <GlassCard className="p-4 md:p-8" hover={false}>
+              {faqs.slice(0, 2).map((faq, index) => (
+                <div key={index} className="md:hidden">
+                  <FAQItem
+                    question={faq.question}
+                    answer={faq.answer}
+                    isOpen={openFAQ === index}
+                    onClick={() => setOpenFAQ(openFAQ === index ? -1 : index)}
+                  />
+                </div>
+              ))}
               {faqs.map((faq, index) => (
-                <FAQItem
-                  key={index}
-                  question={faq.question}
-                  answer={faq.answer}
-                  isOpen={openFAQ === index}
-                  onClick={() => setOpenFAQ(openFAQ === index ? -1 : index)}
-                />
+                <div key={index} className="hidden md:block">
+                  <FAQItem
+                    question={faq.question}
+                    answer={faq.answer}
+                    isOpen={openFAQ === index}
+                    onClick={() => setOpenFAQ(openFAQ === index ? -1 : index)}
+                  />
+                </div>
               ))}
             </GlassCard>
           </AnimatedSection>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-32 relative overflow-hidden">
+      {/* CTA Section - compact on mobile */}
+      <section className="py-16 md:py-32 relative overflow-hidden">
         <div className="absolute inset-0">
           <img 
             src={cyberImage2} 
@@ -1011,25 +1029,24 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
           <CyberGrid />
         </div>
-        <FloatingParticles />
-        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 text-center relative z-10">
           <AnimatedSection>
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.8 }}
-              className="mb-8"
+              transition={{ duration: 0.5 }}
+              className="mb-4 md:mb-8"
               data-testid="icon-cta-shield"
             >
-              <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-blue-500/30 to-amber-500/20 flex items-center justify-center mb-6">
-                <Shield className="w-10 h-10 text-blue-400" aria-label="Security shield" />
+              <div className="w-14 h-14 md:w-20 md:h-20 mx-auto rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-500/30 to-amber-500/20 flex items-center justify-center mb-4 md:mb-6">
+                <Shield className="w-7 h-7 md:w-10 md:h-10 text-blue-400" aria-label="Security shield" />
               </div>
             </motion.div>
-            <h2 className="text-4xl md:text-6xl font-bold mb-6">
-              Ready to Secure<br />Your Digital Assets?
+            <h2 className="text-2xl md:text-6xl font-bold mb-3 md:mb-6">
+              Ready to Secure Your Assets?
             </h2>
-            <p className="text-xl text-white/50 mb-12 max-w-2xl mx-auto">
-              Join the world's most security-conscious enterprises. Let our experts identify your vulnerabilities before attackers do.
+            <p className="text-sm md:text-xl text-white/50 mb-6 md:mb-12 max-w-2xl mx-auto">
+              Join the world's most security-conscious enterprises.
             </p>
             <motion.div 
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
