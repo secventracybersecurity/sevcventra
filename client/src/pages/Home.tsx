@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { Link } from "wouter";
+import gsap from "gsap";
 import { 
   Shield, 
   Globe, 
@@ -15,7 +16,10 @@ import {
   Zap,
   Plus,
   Minus,
-  Quote
+  Quote,
+  CheckCircle2,
+  TrendingUp,
+  Users
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -25,6 +29,195 @@ import cyberImage1 from "@assets/stock_images/cybersecurity_networ_a71763c1.jpg"
 import cyberImage2 from "@assets/stock_images/cybersecurity_networ_dcb482f8.jpg";
 import dataCenterImage from "@assets/stock_images/data_center_server_r_2a18e4cb.jpg";
 import teamImage from "@assets/stock_images/professional_busines_69f0cc26.jpg";
+
+// GSAP-powered floating blob component
+function GlowingBlob() {
+  const blobRef = useRef<HTMLDivElement>(null);
+  const blob2Ref = useRef<HTMLDivElement>(null);
+  
+  useLayoutEffect(() => {
+    if (!blobRef.current || !blob2Ref.current) return;
+    
+    const ctx = gsap.context(() => {
+      // Primary blob animation
+      gsap.to(blobRef.current, {
+        x: "random(-100, 100)",
+        y: "random(-80, 80)",
+        scale: "random(0.8, 1.2)",
+        duration: 8,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+      });
+      
+      // Secondary blob animation
+      gsap.to(blob2Ref.current, {
+        x: "random(-80, 80)",
+        y: "random(-100, 100)",
+        scale: "random(0.9, 1.3)",
+        duration: 10,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        delay: 2,
+      });
+    });
+    
+    return () => ctx.revert();
+  }, []);
+  
+  return (
+    <>
+      <div
+        ref={blobRef}
+        className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full pointer-events-none"
+        style={{
+          background: "radial-gradient(circle, rgba(59,130,246,0.4) 0%, rgba(59,130,246,0.1) 40%, transparent 70%)",
+          filter: "blur(60px)",
+        }}
+        data-testid="blob-primary"
+      />
+      <div
+        ref={blob2Ref}
+        className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full pointer-events-none"
+        style={{
+          background: "radial-gradient(circle, rgba(245,158,11,0.3) 0%, rgba(245,158,11,0.1) 40%, transparent 70%)",
+          filter: "blur(60px)",
+        }}
+        data-testid="blob-secondary"
+      />
+    </>
+  );
+}
+
+// GSAP text reveal animation component
+function TextReveal({ children, delay = 0 }: { children: string; delay?: number }) {
+  const textRef = useRef<HTMLSpanElement>(null);
+  
+  useLayoutEffect(() => {
+    if (!textRef.current) return;
+    
+    const chars = textRef.current.querySelectorAll('.char');
+    
+    const ctx = gsap.context(() => {
+      gsap.fromTo(chars,
+        { 
+          opacity: 0, 
+          y: 50,
+          rotateX: -90,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          duration: 0.8,
+          stagger: 0.03,
+          delay: delay,
+          ease: "back.out(1.7)",
+        }
+      );
+    });
+    
+    return () => ctx.revert();
+  }, [delay]);
+  
+  return (
+    <span ref={textRef} className="inline-block" style={{ perspective: "1000px" }}>
+      {children.split('').map((char, i) => (
+        <span
+          key={i}
+          className="char inline-block"
+          style={{ 
+            transformStyle: "preserve-3d",
+            opacity: 0,
+          }}
+        >
+          {char === ' ' ? '\u00A0' : char}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+// Glassmorphism card with parallax hover
+function GlassPanel({ 
+  icon: Icon, 
+  title, 
+  value, 
+  delay = 0 
+}: { 
+  icon: React.ElementType; 
+  title: string; 
+  value: string;
+  delay?: number;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  
+  useLayoutEffect(() => {
+    if (!cardRef.current) return;
+    
+    const ctx = gsap.context(() => {
+      gsap.fromTo(cardRef.current,
+        { opacity: 0, y: 60, scale: 0.9 },
+        { 
+          opacity: 1, 
+          y: 0, 
+          scale: 1,
+          duration: 1,
+          delay: delay,
+          ease: "power3.out",
+        }
+      );
+    });
+    
+    return () => ctx.revert();
+  }, [delay]);
+  
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left - rect.width / 2) / 20;
+    const y = (e.clientY - rect.top - rect.height / 2) / 20;
+    setMousePosition({ x, y });
+  };
+  
+  const handleMouseLeave = () => {
+    setMousePosition({ x: 0, y: 0 });
+  };
+  
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      animate={{
+        rotateX: -mousePosition.y,
+        rotateY: mousePosition.x,
+      }}
+      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+      className="relative p-4 md:p-6 rounded-2xl overflow-hidden cursor-pointer"
+      style={{
+        background: "rgba(255,255,255,0.03)",
+        backdropFilter: "blur(20px)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        transformStyle: "preserve-3d",
+      }}
+      data-testid={`glass-panel-${title.toLowerCase().replace(/\s+/g, '-')}`}
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-amber-500/5 opacity-0 hover:opacity-100 transition-opacity duration-500" />
+      <div className="relative z-10 flex items-center gap-3 md:gap-4">
+        <div className="p-2 md:p-3 rounded-xl bg-blue-500/20 border border-blue-500/30">
+          <Icon className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
+        </div>
+        <div>
+          <p className="text-xl md:text-2xl font-bold text-white">{value}</p>
+          <p className="text-xs md:text-sm text-white/50">{title}</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -261,103 +454,128 @@ export default function Home() {
 
   return (
     <div className="bg-background min-h-screen">
-      {/* Hero Section */}
+      {/* Hero Section - GSAP + Framer Motion */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img 
             src={cyberImage1} 
             alt="Cybersecurity network" 
-            className="absolute inset-0 w-full h-full object-cover opacity-20"
+            className="absolute inset-0 w-full h-full object-cover opacity-15"
             data-testid="image-hero"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/85 to-background" />
           <CyberGrid />
           <FloatingParticles />
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[128px] animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-[128px] animate-pulse" style={{ animationDelay: "1s" }} />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,hsl(222,47%,4%)_70%)]" />
+          <GlowingBlob />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(222,47%,4%)_80%)]" />
         </div>
 
         <motion.div
           style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-          className="relative z-10 max-w-6xl mx-auto px-6 text-center"
+          className="relative z-10 max-w-7xl mx-auto px-4 md:px-6"
+        >
+          <div className="grid lg:grid-cols-[1fr,auto] gap-8 lg:gap-16 items-center">
+            {/* Left side - Main content */}
+            <div className="text-center lg:text-left">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-2 mb-6 md:mb-8"
+              >
+                <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+                <span className="text-blue-400 font-medium text-sm">Trusted by Fortune 500 Enterprises</span>
+              </motion.div>
+              
+              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 md:mb-8 leading-[0.95]">
+                <span className="block text-white">
+                  <TextReveal delay={0.3}>Cyber Protection</TextReveal>
+                </span>
+                <span className="block bg-gradient-to-r from-blue-400 via-blue-300 to-amber-400 bg-clip-text text-transparent">
+                  <TextReveal delay={0.8}>You Can Trust</TextReveal>
+                </span>
+              </h1>
+              
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.4 }}
+                className="text-lg md:text-xl lg:text-2xl text-white/60 max-w-2xl mx-auto lg:mx-0 mb-8 md:mb-10 leading-relaxed"
+              >
+                World-class penetration testing and offensive security for enterprises that demand excellence.
+              </motion.p>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.6 }}
+                className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
+              >
+                <Link href="/contact">
+                  <Button
+                    size="lg"
+                    className="bg-blue-500 text-white font-semibold w-full sm:w-auto"
+                    data-testid="button-hero-contact"
+                  >
+                    Start Your Assessment
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </Link>
+                <Link href="/services">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="border-white/20 bg-white/5 backdrop-blur-sm text-white w-full sm:w-auto"
+                    data-testid="button-hero-services"
+                  >
+                    Explore Services
+                  </Button>
+                </Link>
+              </motion.div>
+            </div>
+
+            {/* Right side - Glassmorphism stat panels */}
+            <div className="hidden lg:grid grid-cols-1 gap-4 w-[280px]">
+              <GlassPanel icon={Shield} title="Security Score" value="99.9%" delay={1.8} />
+              <GlassPanel icon={Users} title="Protected Users" value="10M+" delay={2.0} />
+              <GlassPanel icon={TrendingUp} title="Threats Blocked" value="500K+" delay={2.2} />
+            </div>
+          </div>
+
+          {/* Mobile stat panels */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 2 }}
+            className="lg:hidden grid grid-cols-3 gap-2 mt-10"
+          >
+            <div className="text-center p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+              <p className="text-lg font-bold text-white">99.9%</p>
+              <p className="text-xs text-white/50">Security</p>
+            </div>
+            <div className="text-center p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+              <p className="text-lg font-bold text-white">10M+</p>
+              <p className="text-xs text-white/50">Protected</p>
+            </div>
+            <div className="text-center p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+              <p className="text-lg font-bold text-white">500K+</p>
+              <p className="text-xs text-white/50">Threats</p>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 2.4 }}
+          className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2"
         >
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="text-white/40"
           >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-2 mb-8"
-            >
-              <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-              <span className="text-blue-400 font-medium text-sm">Trusted by Fortune 500 Enterprises</span>
-            </motion.div>
-            
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.3 }}
-              className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 leading-[0.9]"
-            >
-              <span className="block text-white">Cyber Protection</span>
-              <span className="block bg-gradient-to-r from-blue-400 via-blue-300 to-amber-400 bg-clip-text text-transparent">
-                You Can Trust
-              </span>
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-xl md:text-2xl text-white/60 max-w-2xl mx-auto mb-12 leading-relaxed"
-            >
-              World-class penetration testing and offensive security for enterprises that demand excellence.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            >
-              <Link href="/contact">
-                <Button
-                  size="lg"
-                  className="bg-blue-500 text-white font-semibold"
-                  data-testid="button-hero-contact"
-                >
-                  Start Your Assessment
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
-              <Link href="/services">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-white/20 bg-white/5 backdrop-blur-sm text-white"
-                  data-testid="button-hero-services"
-                >
-                  Explore Services
-                </Button>
-              </Link>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.2 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          >
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="text-white/40"
-            >
-              <ChevronDown className="w-8 h-8" />
-            </motion.div>
+            <ChevronDown className="w-6 h-6 md:w-8 md:h-8" />
           </motion.div>
         </motion.div>
       </section>

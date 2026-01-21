@@ -105,3 +105,11 @@ The site follows strict design guidelines defined in `design_guidelines.md`:
 - **Team Section**: Professional team photo with avatar stack and 4 team stat cards
 - **All images have data-testids**: image-hero, image-datacenter, image-team, image-cta
 - **Team stats testids**: team-stats-grid, stat-team-experts, stat-team-certs, stat-team-countries, stat-team-bounties
+
+### GSAP + Framer Motion Hero (January 2026)
+- **GlowingBlob**: Two GSAP-animated floating blobs with random movement and yoyo effects
+- **TextReveal**: Character-by-character 3D text reveal with rotateX and staggered animation
+- **GlassPanel**: Glassmorphism stat cards with GSAP entrance + Framer Motion parallax hover
+- **Responsive Layout**: Desktop shows glass panels on right, mobile shows compact stat row
+- **Proper Cleanup**: All GSAP animations use gsap.context() with cleanup on unmount
+- **Navigation**: Scroll-to-top on route change, enhanced mobile menu with spring animations
