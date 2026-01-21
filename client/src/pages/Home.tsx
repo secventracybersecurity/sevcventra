@@ -635,24 +635,60 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Mobile stat panels */}
+          {/* Mobile stat panels with pulse animation */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 2 }}
-            className="lg:hidden grid grid-cols-3 gap-2 mt-10"
+            className="lg:hidden grid grid-cols-3 gap-2 mt-8"
           >
-            <div className="text-center p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
-              <p className="text-lg font-bold text-white">99.9%</p>
-              <p className="text-xs text-white/50">Security</p>
-            </div>
-            <div className="text-center p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
-              <p className="text-lg font-bold text-white">10M+</p>
-              <p className="text-xs text-white/50">Protected</p>
-            </div>
-            <div className="text-center p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
-              <p className="text-lg font-bold text-white">500K+</p>
-              <p className="text-xs text-white/50">Threats</p>
+            {[
+              { value: "99.9%", label: "Security", delay: 0 },
+              { value: "10M+", label: "Protected", delay: 0.2 },
+              { value: "500K+", label: "Threats", delay: 0.4 },
+            ].map((stat) => (
+              <motion.div 
+                key={stat.label}
+                className="text-center p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10"
+                animate={{ 
+                  borderColor: ["rgba(255,255,255,0.1)", "rgba(59,130,246,0.3)", "rgba(255,255,255,0.1)"]
+                }}
+                transition={{ duration: 3, repeat: Infinity, delay: stat.delay }}
+              >
+                <p className="text-lg font-bold text-white">{stat.value}</p>
+                <p className="text-xs text-white/50">{stat.label}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Mobile animated hero image strip */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 2.2 }}
+            className="lg:hidden mt-6 relative rounded-xl overflow-hidden aspect-[21/9]"
+            data-testid="image-hero-mobile-strip"
+          >
+            <img 
+              src={cyberImage2} 
+              alt="Cybersecurity visualization" 
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background" />
+            <div className="absolute inset-0 bg-blue-500/10" />
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"
+              animate={{ x: ["-100%", "200%"] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              style={{ width: "50%" }}
+            />
+            <div className="absolute bottom-2 left-3 flex items-center gap-2">
+              <motion.div
+                className="w-2 h-2 rounded-full bg-green-400"
+                animate={{ scale: [1, 1.3, 1], opacity: [1, 0.6, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+              <span className="text-xs text-white/70">Live Threat Monitoring</span>
             </div>
           </motion.div>
         </motion.div>
@@ -679,9 +715,11 @@ export default function Home() {
       {/* Client Logos & Recognition */}
       <ClientLogosSection />
 
-      {/* Stats Section - compact on mobile */}
+      {/* Stats Section - compact on mobile with particles */}
       <section className="py-12 md:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-amber-500/5" />
+        <FloatingParticles />
+        <CyberGrid />
         <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
             <AnimatedSection delay={0}>
@@ -728,11 +766,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services Section - compact on mobile */}
+      {/* Services Section - compact on mobile with animations */}
       <section className="py-16 md:py-32 relative">
         <div className="absolute inset-0">
           <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[150px]" />
         </div>
+        <FloatingParticles />
         <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
           <AnimatedSection className="text-center mb-10 md:mb-20">
             <p className="text-blue-400 font-medium mb-2 md:mb-4 tracking-widest uppercase text-xs md:text-sm">
@@ -750,9 +789,15 @@ export default function Home() {
             {services.map((service, index) => (
               <AnimatedSection key={service.title} delay={index * 0.05}>
                 <GlassCard className="p-4 md:p-8 h-full">
-                  <div className="w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-500/20 to-amber-500/10 flex items-center justify-center mb-3 md:mb-6">
+                  <motion.div 
+                    className="w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-500/20 to-amber-500/10 flex items-center justify-center mb-3 md:mb-6"
+                    animate={{ 
+                      boxShadow: ["0 0 0 0 rgba(59,130,246,0)", "0 0 20px 3px rgba(59,130,246,0.3)", "0 0 0 0 rgba(59,130,246,0)"]
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.2 }}
+                  >
                     <service.icon className="w-5 h-5 md:w-8 md:h-8 text-blue-400" />
-                  </div>
+                  </motion.div>
                   <h3 className="text-sm md:text-xl font-semibold mb-1 md:mb-3 text-white">
                     {service.title}
                   </h3>
@@ -805,9 +850,13 @@ export default function Home() {
                 ].map((item, index) => (
                   <AnimatedText key={item.title} delay={index * 0.05}>
                     <div className="flex items-center gap-3 md:gap-4">
-                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-gradient-to-br from-blue-500/20 to-amber-500/10 flex items-center justify-center flex-shrink-0">
+                      <motion.div 
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-gradient-to-br from-blue-500/20 to-amber-500/10 flex items-center justify-center flex-shrink-0"
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
+                      >
                         <item.icon className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
-                      </div>
+                      </motion.div>
                       <div>
                         <h4 className="text-sm md:text-base font-semibold text-white">{item.title}</h4>
                         <p className="text-xs md:text-sm text-white/50">{item.description}</p>
@@ -815,6 +864,33 @@ export default function Home() {
                     </div>
                   </AnimatedText>
                 ))}
+              </div>
+
+              {/* Mobile-only compact image */}
+              <div className="mt-6 md:hidden">
+                <motion.div
+                  className="relative rounded-xl overflow-hidden aspect-video"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  data-testid="image-datacenter-mobile"
+                >
+                  <img 
+                    src={dataCenterImage} 
+                    alt="Secure data center" 
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                  <div className="absolute bottom-3 left-3 flex items-center gap-2">
+                    <motion.div
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <Shield className="w-5 h-5 text-blue-400" />
+                    </motion.div>
+                    <span className="text-xs font-semibold text-white">Enterprise Grade Security</span>
+                  </div>
+                </motion.div>
               </div>
             </AnimatedSection>
 

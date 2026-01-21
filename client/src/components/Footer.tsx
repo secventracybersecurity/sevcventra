@@ -29,7 +29,54 @@ const footerLinks = {
 export function Footer() {
   return (
     <footer className="bg-background border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-6 py-20">
+      {/* Mobile compact footer */}
+      <div className="md:hidden px-4 py-8">
+        <div className="flex items-center justify-between mb-4">
+          <Link href="/">
+            <div className="flex items-center gap-2 cursor-pointer" data-testid="link-footer-logo-mobile">
+              <Shield className="w-6 h-6 text-blue-400" />
+              <span className="text-lg font-bold">Secventra</span>
+            </div>
+          </Link>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" className="w-8 h-8 rounded-full bg-white/5" asChild>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" data-testid="link-linkedin-mobile">
+                <Linkedin className="w-4 h-4 text-white/50" />
+              </a>
+            </Button>
+            <Button variant="ghost" size="icon" className="w-8 h-8 rounded-full bg-white/5" asChild>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" data-testid="link-twitter-mobile">
+                <Twitter className="w-4 h-4 text-white/50" />
+              </a>
+            </Button>
+            <Button variant="ghost" size="icon" className="w-8 h-8 rounded-full bg-white/5" asChild>
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" data-testid="link-github-mobile">
+                <Github className="w-4 h-4 text-white/50" />
+              </a>
+            </Button>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-white/40 mb-3">
+          {footerLinks.company.slice(0, 4).map((link) => (
+            <Link key={link.href} href={link.href}>
+              <span className="cursor-pointer">{link.label}</span>
+            </Link>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-x-3 text-xs text-white/30">
+          {footerLinks.legal.map((link) => (
+            <Link key={link.href} href={link.href}>
+              <span className="cursor-pointer">{link.label}</span>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-4 pt-3 border-t border-white/5 text-center">
+          <p className="text-white/30 text-xs">© {new Date().getFullYear()} Secventra. All rights reserved.</p>
+        </div>
+      </div>
+
+      {/* Desktop full footer */}
+      <div className="hidden md:block max-w-7xl mx-auto px-6 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           <div className="lg:col-span-1">
             <Link href="/">
