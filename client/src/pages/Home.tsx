@@ -347,6 +347,26 @@ const trustKeywords = [
   "Security Audit",
 ];
 
+// Premium client logos (Fortune 500 style)
+const clientLogos = [
+  { name: "Microsoft", abbr: "MS" },
+  { name: "Goldman Sachs", abbr: "GS" },
+  { name: "JPMorgan", abbr: "JPM" },
+  { name: "Meta", abbr: "META" },
+  { name: "Salesforce", abbr: "CRM" },
+  { name: "Adobe", abbr: "ADBE" },
+  { name: "Stripe", abbr: "STRP" },
+  { name: "Airbnb", abbr: "ABNB" },
+];
+
+// Industry recognition and awards
+const recognitions = [
+  { title: "Gartner", subtitle: "Magic Quadrant Leader 2024" },
+  { title: "Forbes", subtitle: "Top 10 Cybersecurity" },
+  { title: "SOC 2", subtitle: "Type II Certified" },
+  { title: "ISO 27001", subtitle: "Certified" },
+];
+
 const faqs = [
   {
     question: "What is Penetration Testing?",
@@ -399,6 +419,91 @@ function MarqueeBand() {
         ))}
       </div>
     </div>
+  );
+}
+
+// Premium client logos section
+function ClientLogosSection() {
+  return (
+    <section className="py-20 relative overflow-hidden border-b border-white/5">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/[0.02] to-transparent" />
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-12"
+        >
+          <p className="text-white/40 text-sm uppercase tracking-widest mb-4">
+            Trusted by industry leaders
+          </p>
+          <h3 className="text-2xl md:text-3xl font-semibold text-white/80">
+            Protecting the World's Most Valuable Enterprises
+          </h3>
+        </motion.div>
+        
+        <div className="grid grid-cols-4 md:grid-cols-8 gap-4 md:gap-6">
+          {clientLogos.map((logo, index) => (
+            <motion.div
+              key={logo.name}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.05 }}
+              className="group"
+            >
+              <div 
+                className="aspect-square flex items-center justify-center rounded-xl bg-white/[0.03] border border-white/[0.06] transition-all duration-300 group-hover:bg-white/[0.06] group-hover:border-white/10"
+                data-testid={`logo-${logo.name.toLowerCase().replace(/\s+/g, '-')}`}
+              >
+                <div className="text-center">
+                  <span className="text-lg md:text-xl font-bold text-white/50 group-hover:text-white/80 transition-colors">
+                    {logo.abbr}
+                  </span>
+                  <p className="text-[10px] text-white/30 mt-1 hidden md:block group-hover:text-white/50 transition-colors">
+                    {logo.name}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Industry Recognition */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mt-16 pt-12 border-t border-white/5"
+        >
+          <p className="text-center text-white/40 text-sm uppercase tracking-widest mb-8">
+            Industry Recognition
+          </p>
+          <div className="flex flex-wrap justify-center gap-8 md:gap-16">
+            {recognitions.map((item, index) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+                className="text-center"
+                data-testid={`recognition-${item.title.toLowerCase().replace(/\s+/g, '-')}`}
+              >
+                <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent">
+                  {item.title}
+                </div>
+                <p className="text-xs md:text-sm text-white/40 mt-1">
+                  {item.subtitle}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </section>
   );
 }
 
@@ -582,6 +687,9 @@ export default function Home() {
 
       {/* Marquee Trust Band */}
       <MarqueeBand />
+
+      {/* Client Logos & Recognition */}
+      <ClientLogosSection />
 
       {/* Stats Section */}
       <section className="py-24 relative overflow-hidden">
