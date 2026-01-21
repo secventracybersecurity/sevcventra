@@ -124,25 +124,25 @@ export function Navigation() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.1 }}
-              className="relative pt-24 px-6 h-full overflow-y-auto"
+              className="relative pt-20 px-4 h-full"
             >
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-0.5">
                 {navLinks.map((link, index) => (
                   <motion.div
                     key={link.href}
-                    initial={{ opacity: 0, x: -30, scale: 0.95 }}
-                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
                     transition={{ 
-                      delay: 0.05 + index * 0.04,
+                      delay: 0.03 + index * 0.03,
                       type: "spring",
-                      stiffness: 300,
-                      damping: 25
+                      stiffness: 400,
+                      damping: 30
                     }}
                   >
                     <Link href={link.href}>
                       <motion.div
-                        whileTap={{ scale: 0.98, x: 5 }}
-                        className={`flex items-center justify-between py-4 px-4 rounded-xl transition-colors ${
+                        whileTap={{ scale: 0.98, x: 3 }}
+                        className={`flex items-center justify-between py-3 px-3 rounded-lg transition-colors ${
                           location === link.href
                             ? "bg-blue-500/20 border border-blue-500/30"
                             : "active:bg-white/5"
@@ -151,7 +151,7 @@ export function Navigation() {
                         aria-current={location === link.href ? "page" : undefined}
                       >
                         <span
-                          className={`text-xl font-semibold ${
+                          className={`text-base font-semibold ${
                             location === link.href
                               ? "text-blue-400"
                               : "text-white/80"
@@ -160,7 +160,7 @@ export function Navigation() {
                           {link.label}
                         </span>
                         <ChevronRight 
-                          className={`w-5 h-5 ${
+                          className={`w-4 h-4 ${
                             location === link.href
                               ? "text-blue-400"
                               : "text-white/40"
@@ -173,22 +173,19 @@ export function Navigation() {
               </div>
               
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="mt-8 px-4"
+                transition={{ delay: 0.3 }}
+                className="mt-4 px-3"
               >
                 <Link href="/contact">
                   <Button
-                    className="w-full bg-blue-500 text-black font-semibold h-14 text-lg"
+                    className="w-full bg-blue-500 text-black font-semibold h-12"
                     data-testid="button-mobile-get-started"
                   >
                     Get Started Today
                   </Button>
                 </Link>
-                <p className="text-center text-sm text-white/40 mt-4">
-                  Enterprise Security Solutions
-                </p>
               </motion.div>
             </motion.nav>
           </motion.div>
