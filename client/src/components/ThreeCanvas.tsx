@@ -16,7 +16,7 @@ export function ThreeCanvas({ children, className = "", camera = { position: [0,
     <div className={`w-full h-full ${className}`}>
       <Canvas
         camera={camera}
-        gl={{ antialias: false, stencil: false, alpha: true, powerPreference: "high-performance" }}
+        gl={{ antialias: true, stencil: false, alpha: true, powerPreference: "high-performance" }}
         dpr={dpr}
       >
         <PerformanceMonitor onDecline={() => setDpr(0.8)} onIncline={() => setDpr(1.2)}>
