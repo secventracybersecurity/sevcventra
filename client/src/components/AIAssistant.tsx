@@ -212,7 +212,7 @@ export function AIAssistant() {
         <div className={`absolute inset-0 rounded-full blur-[20px] transition-all duration-500 ${isChatOpen ? 'bg-accent/40 scale-150' : (isHovered ? 'bg-primary/50 scale-125' : 'bg-primary/20 scale-100')}`} />
         
         <div className="absolute inset-0 z-10 w-full h-full">
-           <Canvas camera={{ position: [0, 0, 4], fov: 45 }} dpr={[1, 1.5]}>
+           <Canvas camera={{ position: [0, 0, 4], fov: 45 }} dpr={1}>
               <ambientLight intensity={0.5} />
               <directionalLight position={[10, 10, 10]} intensity={2} color="#ffffff" />
               <AIAvatarCore isHovered={isHovered} isChatOpen={isChatOpen} />

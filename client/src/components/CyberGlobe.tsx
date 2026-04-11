@@ -112,11 +112,11 @@ function GlobeWithTexture({ globeRadius }: { globeRadius: number }) {
       
       setAttacks((prev) => {
         const updated = [...prev, newAttack];
-        return updated.length > 25 ? updated.slice(updated.length - 25) : updated;
+        return updated.length > 15 ? updated.slice(updated.length - 15) : updated;
       });
     };
 
-    const interval = setInterval(generateAttack, 800);
+    const interval = setInterval(generateAttack, 1200);
     return () => clearInterval(interval);
   }, []);
 

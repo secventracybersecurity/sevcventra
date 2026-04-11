@@ -8,8 +8,8 @@ export function ThreeBackground() {
   const { mouse } = useThree();
   
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const count = isMobile ? 800 : 2000;
-  const dustCount = isMobile ? 300 : 800;
+  const count = isMobile ? 200 : 500;
+  const dustCount = isMobile ? 100 : 250;
 
   const positions = useMemo(() => {
     const pos = new Float32Array(count * 3);

@@ -3,7 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-const PARTICLE_COUNT = isMobile ? 1200 : 3500;
+const PARTICLE_COUNT = isMobile ? 300 : 800; // Significantly reduced for performance
 const CONNECTION_DISTANCE = isMobile ? 1.5 : 2.0;
 const MOUSE_INFLUENCE_RADIUS = 3;
 const MOUSE_REPULSION_FORCE = 0.15;
@@ -77,7 +77,7 @@ export function ParticleField() {
     );
 
     let lineVertexIndex = 0;
-    const maxLines = Math.min(PARTICLE_COUNT * 2, isMobile ? 300 : 1000);
+    const maxLines = Math.min(PARTICLE_COUNT * 2, isMobile ? 100 : 300); // Reduced lines
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const ix = i * 3;

@@ -117,11 +117,13 @@ function App() {
         <ScrollProgress />
 
         {/* Global Persistent 3D Particle Background */}
-        <div className="fixed inset-0 z-0 pointer-events-none opacity-40">
-          <ThreeCanvas camera={{ position: [0, 0, 10], fov: 45 }} controls={false}>
-            <ThreeBackground />
-          </ThreeCanvas>
-        </div>
+        {location !== "/" && (
+          <div className="fixed inset-0 z-0 pointer-events-none opacity-40">
+            <ThreeCanvas camera={{ position: [0, 0, 10], fov: 45 }} controls={false}>
+              <ThreeBackground />
+            </ThreeCanvas>
+          </div>
+        )}
 
         <ScrollToTop />
         <AIAssistant />
