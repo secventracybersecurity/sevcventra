@@ -228,7 +228,7 @@ export function BlurRevealText({
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
-  const letters = Array.from(text);
+  const words = text.split(" ");
 
   const container = {
     hidden: { opacity: 0 },
@@ -243,7 +243,6 @@ export function BlurRevealText({
       opacity: 1,
       y: 0,
       rotateX: 0,
-      filter: "blur(0px)",
       transition: {
         type: "spring",
         damping: 15,
@@ -254,31 +253,33 @@ export function BlurRevealText({
       opacity: 0,
       y: 30,
       rotateX: -60,
-      filter: "blur(10px)",
     },
   };
 
   return (
     <motion.div
       ref={ref}
-      style={{ display: "flex", overflow: "hidden", flexWrap: "wrap", perspective: "1000px" }}
+      style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", perspective: "1000px" }}
       variants={container}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       className={className}
     >
-      {letters.map((letter, index) => (
-        <motion.span 
-          variants={child} 
-          key={index}
-          style={{ 
-            display: "inline-block", 
-            marginRight: letter === " " ? "0.3em" : "0px",
-            transformOrigin: "bottom center",
-          }}
-        >
-          {letter === " " ? "\u00A0" : letter}
-        </motion.span>
+      {words.map((word, wordIndex) => (
+        <span key={wordIndex} style={{ display: "inline-flex", overflow: "hidden", marginRight: wordIndex !== words.length - 1 ? "0.3em" : "0px" }}>
+          {Array.from(word).map((letter, letterIndex) => (
+            <motion.span 
+              variants={child} 
+              key={letterIndex}
+              style={{ 
+                display: "inline-block", 
+                transformOrigin: "bottom center",
+              }}
+            >
+              {letter}
+            </motion.span>
+          ))}
+        </span>
       ))}
     </motion.div>
   );
