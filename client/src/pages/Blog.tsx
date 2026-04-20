@@ -95,7 +95,7 @@ export default function Blog() {
   const heroY = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="bg-transparent min-h-screen">
       <section ref={heroRef} className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-rose-500/10 via-transparent to-transparent" />
@@ -192,11 +192,10 @@ export default function Blog() {
                 <Button
                   key={category}
                   variant={category === "All" ? "default" : "ghost"}
-                  className={`rounded-full ${
-                    category === "All"
+                  className={`rounded-full ${category === "All"
                       ? "bg-blue-500 text-black"
                       : "bg-white/5 text-white/60"
-                  }`}
+                    }`}
                   data-testid={`button-category-${category.toLowerCase().replace(/\s+/g, "-")}`}
                 >
                   {category}

@@ -1,1159 +1,547 @@
-import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring } from "framer-motion";
-import { useRef, useState, useEffect, useLayoutEffect } from "react";
+import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { Link } from "wouter";
-import gsap from "gsap";
-import { 
-  Shield, 
-  Globe, 
-  Cloud, 
-  Network, 
-  Smartphone, 
-  Target,
-  ArrowRight,
-  ChevronDown,
-  Lock,
-  Eye,
-  Zap,
-  Plus,
-  Minus,
-  Quote,
-  CheckCircle2,
-  TrendingUp,
-  Users
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { AnimatedSection, AnimatedText, GlassCard } from "@/components/AnimatedSection";
+import { ChevronRight, Shield, ArrowRight } from "lucide-react";
+import { gsap } from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { LeadModal } from "@/components/LeadModal";
+import { TiltCard } from "@/components/3DTiltCard";
+import {
+  AnimatedSection,
+  MaskReveal,
+  ScaleReveal,
+  StaggerChildren,
+  StaggerItem,
+  AnimatedCounter,
+} from "@/components/AnimatedSection";
+import { ThreeCanvas } from "@/components/ThreeCanvas";
+import { CyberGlobeContent } from "@/components/CyberGlobe";
+import { ParticleField } from "@/components/ParticleField";
+import { TypewriterText, SplitText } from "@/components/TypewriterText";
 
-import cyberImage1 from "@assets/stock_images/cybersecurity_networ_a71763c1.jpg";
-import cyberImage2 from "@assets/stock_images/cybersecurity_networ_dcb482f8.jpg";
-import dataCenterImage from "@assets/stock_images/data_center_server_r_2a18e4cb.jpg";
-import teamImage from "@assets/stock_images/professional_busines_69f0cc26.jpg";
+// Expertise Cards Data
+const expertise = [
+  {
+    image: "/assets/expertise_pentesting.png",
+    title: "Web & Mobile Pentesting",
+    description:
+      "We don't just run scanners. We manually hunt for logic flaws in your apps.",
+    href: "/services/web-app-pentesting",
+  },
+  {
+    image: "/assets/expertise_network.png",
+    title: "Network & Cloud Audit",
+    description:
+      'From AWS/Azure to on-premise servers, we find the "backdoors" you missed.',
+    href: "/services/network-security",
+  },
+  {
+    image: "/assets/expertise_forensics.png",
+    title: "Digital Forensics",
+    description:
+      "If the worst happens, we're on the ground. Evidence preservation and root-cause analysis.",
+    href: "/services/digital-forensics",
+  },
+];
 
-// GSAP-powered floating blob component
-function GlowingBlob() {
-  const blobRef = useRef<HTMLDivElement>(null);
-  const blob2Ref = useRef<HTMLDivElement>(null);
-  
-  useLayoutEffect(() => {
-    if (!blobRef.current || !blob2Ref.current) return;
-    
-    const ctx = gsap.context(() => {
-      // Primary blob animation
-      gsap.to(blobRef.current, {
-        x: "random(-100, 100)",
-        y: "random(-80, 80)",
-        scale: "random(0.8, 1.2)",
-        duration: 8,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      });
-      
-      // Secondary blob animation
-      gsap.to(blob2Ref.current, {
-        x: "random(-80, 80)",
-        y: "random(-100, 100)",
-        scale: "random(0.9, 1.3)",
-        duration: 10,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        delay: 2,
-      });
-    });
-    
-    return () => ctx.revert();
-  }, []);
-  
-  return (
-    <>
-      <div
-        ref={blobRef}
-        className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full pointer-events-none"
-        style={{
-          background: "radial-gradient(circle, rgba(59,130,246,0.4) 0%, rgba(59,130,246,0.1) 40%, transparent 70%)",
-          filter: "blur(60px)",
-        }}
-        data-testid="blob-primary"
-      />
-      <div
-        ref={blob2Ref}
-        className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full pointer-events-none"
-        style={{
-          background: "radial-gradient(circle, rgba(245,158,11,0.3) 0%, rgba(245,158,11,0.1) 40%, transparent 70%)",
-          filter: "blur(60px)",
-        }}
-        data-testid="blob-secondary"
-      />
-    </>
-  );
-}
+const standards = [
+  {
+    title: "OWASP Top 10",
+    description:
+      "We don't just run automated scans. We manually test your applications against the world's most critical security risks—from SQL injections to broken access control ensuring your code is leak-proof from day one.",
+  },
+  {
+    title: "NIST Framework",
+    description:
+      "We help you move from reactive to proactive. By following the NIST standard, we provide a comprehensive Network Security Audit and Risk Assessment. This framework allows us to Identify, Protect, and Respond to threats, giving you a scalable Information Security roadmap.",
+  },
+  {
+    title: "SANS",
+    description:
+      "Our team applies elite investigative techniques for Digital Forensics and Incident Response. We use SANS-level precision to track 'Patient Zero' and preserve evidence, ensuring your Endpoint Security and internal data remain defensible in any breach scenario.",
+  },
+  {
+    title: "ISO 27001 & GDPR Compliance",
+    description:
+      "Security is a business enabler. We conduct thorough Compliance Audits to align your infrastructure with ISO 27001 and Global Data Privacy laws. We close the gaps in your Cloud Security so you can sign enterprise-level contracts with total confidence.",
+  },
+];
 
-// GSAP text reveal animation component
-function TextReveal({ children, delay = 0 }: { children: string; delay?: number }) {
-  const textRef = useRef<HTMLSpanElement>(null);
-  
-  useLayoutEffect(() => {
-    if (!textRef.current) return;
-    
-    const chars = textRef.current.querySelectorAll('.char');
-    
-    const ctx = gsap.context(() => {
-      gsap.fromTo(chars,
-        { 
-          opacity: 0, 
-          y: 50,
-          rotateX: -90,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          duration: 0.8,
-          stagger: 0.03,
-          delay: delay,
-          ease: "back.out(1.7)",
-        }
-      );
-    });
-    
-    return () => ctx.revert();
-  }, [delay]);
-  
-  return (
-    <span ref={textRef} className="inline-block" style={{ perspective: "1000px" }}>
-      {children.split('').map((char, i) => (
-        <span
-          key={i}
-          className="char inline-block"
-          style={{ 
-            transformStyle: "preserve-3d",
-            opacity: 0,
-          }}
-        >
-          {char === ' ' ? '\u00A0' : char}
-        </span>
-      ))}
-    </span>
-  );
-}
+const stats = [
+  {
+    value: 150,
+    suffix: "+",
+    label: "CLIENTS SECURED",
+  },
+  {
+    value: 30,
+    suffix: "+",
+    label: "SECURITY ENGINEERS",
+  },
+  {
+    value: 12,
+    suffix: "+",
+    label: "COUNTRIES SERVED",
+  },
+  {
+    value: 5000,
+    suffix: "+",
+    label: "VULNS REPORTED",
+  },
+];
 
-// Glassmorphism card with parallax hover
-function GlassPanel({ 
-  icon: Icon, 
-  title, 
-  value, 
-  delay = 0 
-}: { 
-  icon: React.ElementType; 
-  title: string; 
-  value: string;
-  delay?: number;
+// Animated counter component
+function AnimatedStat({
+  value,
+  suffix,
+  label,
+  index,
+}: {
+  value: number;
+  suffix?: string;
+  label: string;
+  index: number;
 }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  
-  useLayoutEffect(() => {
-    if (!cardRef.current) return;
-    
-    const ctx = gsap.context(() => {
-      gsap.fromTo(cardRef.current,
-        { opacity: 0, y: 60, scale: 0.9 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          scale: 1,
-          duration: 1,
-          delay: delay,
-          ease: "power3.out",
-        }
-      );
-    });
-    
-    return () => ctx.revert();
-  }, [delay]);
-  
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left - rect.width / 2) / 20;
-    const y = (e.clientY - rect.top - rect.height / 2) / 20;
-    setMousePosition({ x, y });
-  };
-  
-  const handleMouseLeave = () => {
-    setMousePosition({ x: 0, y: 0 });
-  };
-  
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
   return (
     <motion.div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      animate={{
-        rotateX: -mousePosition.y,
-        rotateY: mousePosition.x,
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{
+        delay: index * 0.15,
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1],
       }}
-      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      className="relative p-4 md:p-6 rounded-2xl overflow-hidden cursor-pointer"
-      style={{
-        background: "rgba(255,255,255,0.03)",
-        backdropFilter: "blur(20px)",
-        border: "1px solid rgba(255,255,255,0.08)",
-        transformStyle: "preserve-3d",
-      }}
-      data-testid={`glass-panel-${title.toLowerCase().replace(/\s+/g, '-')}`}
+      className="flex flex-col items-center min-w-[70vw] snap-center sm:min-w-0 shrink-0 group"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-amber-500/5 opacity-0 hover:opacity-100 transition-opacity duration-500" />
-      <div className="relative z-10 flex items-center gap-3 md:gap-4">
-        <div className="p-2 md:p-3 rounded-xl bg-blue-500/20 border border-blue-500/30">
-          <Icon className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
-        </div>
-        <div>
-          <p className="text-xl md:text-2xl font-bold text-white">{value}</p>
-          <p className="text-xs md:text-sm text-white/50">{title}</p>
-        </div>
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={isInView ? { scale: 1, opacity: 1 } : {}}
+        transition={{
+          delay: index * 0.15 + 0.2,
+          type: "spring",
+          damping: 20,
+          stiffness: 100,
+        }}
+        className="text-[40px] sm:text-[56px] font-bold text-white mb-3 tabular-nums tracking-tighter leading-none"
+      >
+        <AnimatedCounter value={value} suffix={suffix} />
+      </motion.div>
+      <div className="text-[11px] sm:text-[13px] font-bold tracking-[0.25em] text-white/70 uppercase">
+        {label}
       </div>
     </motion.div>
   );
 }
 
-function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const motionValue = useMotionValue(0);
-  const springValue = useSpring(motionValue, { duration: 2000, bounce: 0.1 });
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  
+export default function Home() {
+  const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const heroRef = useRef<HTMLDivElement>(null);
+  const globeSectionRef = useRef<HTMLDivElement>(null);
+
+  // Parallax transforms for hero
+  const { scrollYProgress: heroScrollProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const heroY = useTransform(heroScrollProgress, [0, 1], [0, 150]);
+  const heroOpacity = useTransform(heroScrollProgress, [0, 0.6], [1, 0]);
+  const heroScale = useTransform(heroScrollProgress, [0, 0.6], [1, 0.95]);
+
   useEffect(() => {
-    if (isInView) {
-      motionValue.set(value);
-    }
-  }, [isInView, motionValue, value]);
-  
-  useEffect(() => {
-    const unsubscribe = springValue.on("change", (latest) => {
-      if (ref.current) {
-        ref.current.textContent = Math.floor(latest).toLocaleString() + suffix;
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!heroRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Stagger capabilities
+      if (document.querySelector(".capabilities-container")) {
+        gsap.from(".capability-card", {
+          scrollTrigger: {
+            trigger: ".capabilities-container",
+            start: "top 85%",
+          },
+          y: 40,
+          opacity: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          ease: "power2.out",
+        });
       }
     });
-    return unsubscribe;
-  }, [springValue, suffix]);
-  
-  return <span ref={ref}>0{suffix}</span>;
-}
 
-function FloatingParticles() {
-  const particles = Array.from({ length: 20 }, (_, i) => ({
-    id: i,
-    size: Math.random() * 4 + 2,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    duration: Math.random() * 20 + 10,
-    delay: Math.random() * 5,
-  }));
+    return () => ctx.revert();
+  }, [isMobile]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {particles.map((particle) => (
+    <div className="bg-[#030303] text-white min-h-screen font-sans selection:bg-primary/30 overflow-x-hidden relative">
+      {/* ===== HERO SECTION — THE SHOWSTOPPER ===== */}
+      <section
+        ref={heroRef}
+        className="relative min-h-[100svh] flex flex-col items-center justify-center text-white text-center px-4 overflow-hidden pt-24 sm:pt-32 pb-12 sm:pb-20 z-10"
+      >
+        {/* 3D Particle Field Background */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <ThreeCanvas
+            camera={{ position: [0, 0, 12], fov: 50 }}
+            controls={false}
+          >
+            <ParticleField />
+          </ThreeCanvas>
+        </div>
+
+        {/* Radial glow pulse */}
         <motion.div
-          key={particle.id}
-          className="absolute rounded-full bg-blue-400/20"
-          style={{
-            width: particle.size,
-            height: particle.size,
-            left: `${particle.x}%`,
-            top: `${particle.y}%`,
-          }}
           animate={{
-            y: [0, -30, 0],
-            x: [0, 15, 0],
-            opacity: [0.2, 0.6, 0.2],
+            scale: [1, 1.1, 1],
+            opacity: [0.06, 0.12, 0.06],
           }}
-          transition={{
-            duration: particle.duration,
-            delay: particle.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-white rounded-full blur-[200px] pointer-events-none z-[1]"
         />
-      ))}
-    </div>
-  );
-}
 
-function CyberGrid() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
-      <motion.div
-        className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(59,130,246,0.1)_50%,transparent_100%)]"
-        animate={{ x: ["-100%", "100%"] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        style={{ width: "50%" }}
-      />
-    </div>
-  );
-}
-
-const services = [
-  {
-    icon: Globe,
-    title: "Web App Pentesting",
-    description: "Comprehensive security assessment of your web applications to identify vulnerabilities before attackers do.",
-  },
-  {
-    icon: Shield,
-    title: "API Security",
-    description: "Deep analysis of API endpoints, authentication flows, and data exposure risks.",
-  },
-  {
-    icon: Cloud,
-    title: "Cloud Security",
-    description: "AWS, Azure, and GCP security assessments to protect your cloud infrastructure.",
-  },
-  {
-    icon: Network,
-    title: "Network Pentesting",
-    description: "Internal and external network penetration testing to secure your perimeter.",
-  },
-  {
-    icon: Smartphone,
-    title: "Mobile Pentesting",
-    description: "iOS and Android application security testing for mobile-first enterprises.",
-  },
-  {
-    icon: Target,
-    title: "Red Teaming",
-    description: "Adversarial simulation exercises that test your entire security posture.",
-  },
-];
-
-const stats = [
-  { value: "15+", label: "Years Experience" },
-  { value: "500+", label: "Enterprises Protected" },
-  { value: "10K+", label: "Vulnerabilities Found" },
-  { value: "99.9%", label: "Client Retention" },
-];
-
-const trustKeywords = [
-  "Data Protection",
-  "Network Security",
-  "Threat Detection", 
-  "Encryption",
-  "Compliance",
-  "Risk Assessment",
-  "Incident Response",
-  "Security Audit",
-];
-
-// Premium client logos (Fortune 500 style)
-const clientLogos = [
-  { name: "Microsoft", abbr: "MS" },
-  { name: "Goldman Sachs", abbr: "GS" },
-  { name: "JPMorgan", abbr: "JPM" },
-  { name: "Meta", abbr: "META" },
-  { name: "Salesforce", abbr: "CRM" },
-  { name: "Adobe", abbr: "ADBE" },
-  { name: "Stripe", abbr: "STRP" },
-  { name: "Airbnb", abbr: "ABNB" },
-];
-
-// Industry recognition and awards
-const recognitions = [
-  { title: "Gartner", subtitle: "Magic Quadrant Leader 2024" },
-  { title: "Forbes", subtitle: "Top 10 Cybersecurity" },
-  { title: "SOC 2", subtitle: "Type II Certified" },
-  { title: "ISO 27001", subtitle: "Certified" },
-];
-
-const faqs = [
-  {
-    question: "What is Penetration Testing?",
-    answer: "Penetration testing is a simulated cyber attack against your systems to identify exploitable vulnerabilities. Our expert team uses the same techniques as real attackers to find security gaps before malicious actors can exploit them."
-  },
-  {
-    question: "How long does an assessment take?",
-    answer: "Typical assessments range from 5-15 days depending on scope. We offer expedited timelines for urgent needs and provide preliminary findings within the first few days for critical issues."
-  },
-  {
-    question: "What industries do you serve?",
-    answer: "We work with Fortune 500 enterprises across finance, healthcare, technology, retail, and government sectors. Our methodologies are tailored to meet industry-specific compliance requirements like PCI-DSS, HIPAA, and SOC 2."
-  },
-  {
-    question: "Do you provide remediation support?",
-    answer: "Yes. Beyond identifying vulnerabilities, we provide detailed remediation guidance, developer workshops, and free retesting after fixes are implemented to ensure issues are properly resolved."
-  },
-];
-
-const testimonials = [
-  {
-    quote: "Secventra found critical vulnerabilities that three other firms missed. Their thoroughness is absolutely unmatched in the industry.",
-    author: "Sarah Chen",
-    role: "CISO",
-    company: "Fortune 500 Tech Company"
-  },
-  {
-    quote: "The quality of their reports and the expertise of their team exceeded all our expectations. A true partner in security.",
-    author: "Michael Rodriguez",
-    role: "VP of Engineering", 
-    company: "Leading Fintech Startup"
-  },
-  {
-    quote: "They don't just find vulnerabilities—they help us understand and fix them. Outstanding professionalism throughout.",
-    author: "Dr. Emily Watson",
-    role: "Security Director",
-    company: "Global Healthcare Provider"
-  },
-];
-
-function MarqueeBand() {
-  return (
-    <div className="relative overflow-hidden py-6 bg-gradient-to-r from-blue-500/10 via-blue-500/5 to-blue-500/10 border-y border-white/5">
-      <div className="flex animate-marquee whitespace-nowrap">
-        {[...trustKeywords, ...trustKeywords, ...trustKeywords].map((keyword, index) => (
-          <span key={index} className="mx-8 text-white/40 font-medium tracking-wider uppercase text-sm flex items-center gap-3">
-            <Shield className="w-4 h-4 text-blue-400/60" />
-            {keyword}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Premium client logos section - compact for mobile
-function ClientLogosSection() {
-  return (
-    <section className="py-10 md:py-20 relative overflow-hidden border-b border-white/5">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/[0.02] to-transparent" />
-      <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-6 md:mb-12"
+          style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
+          className="hero-content max-w-[1200px] w-full mx-auto z-10 relative flex flex-col gap-12 sm:gap-16"
         >
-          <p className="text-white/40 text-xs md:text-sm uppercase tracking-widest mb-2">
-            Trusted by industry leaders
-          </p>
-          <h3 className="text-lg md:text-3xl font-semibold text-white/80">
-            Protecting the World's Most Valuable Enterprises
-          </h3>
-        </motion.div>
-        
-        <div className="grid grid-cols-4 md:grid-cols-8 gap-2 md:gap-6">
-          {clientLogos.map((logo, index) => (
+          <div className="max-w-[900px] mx-auto text-center px-4">
+            {/* Status badge */}
             <motion.div
-              key={logo.name}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: index * 0.02 }}
-              className="group"
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8 mx-auto"
             >
-              <div 
-                className="aspect-square flex items-center justify-center rounded-lg md:rounded-xl bg-white/[0.03] border border-white/[0.06] transition-all duration-300 group-hover:bg-white/[0.06] group-hover:border-white/10"
-                data-testid={`logo-${logo.name.toLowerCase().replace(/\s+/g, '-')}`}
-              >
-                <span className="text-sm md:text-xl font-bold text-white/50 group-hover:text-white/80 transition-colors">
-                  {logo.abbr}
-                </span>
-              </div>
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
+              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-white/70">
+                Securing the Digital Core
+              </span>
             </motion.div>
-          ))}
-        </div>
 
-        {/* Industry Recognition - horizontal scroll on mobile */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-8 md:mt-16 pt-6 md:pt-12 border-t border-white/5"
-        >
-          <div className="grid grid-cols-4 gap-2 md:flex md:flex-wrap md:justify-center md:gap-16">
-            {recognitions.map((item, index) => (
-              <div
-                key={item.title}
-                className="text-center"
-                data-testid={`recognition-${item.title.toLowerCase().replace(/\s+/g, '-')}`}
-              >
-                <div className="text-sm md:text-3xl font-bold bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent">
-                  {item.title}
-                </div>
-                <p className="text-[9px] md:text-sm text-white/40 mt-0.5 md:mt-1 leading-tight">
-                  {item.subtitle}
-                </p>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
+            {/* Main headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-[clamp(2.5rem,6vw,5.5rem)] font-bold leading-[1.1] tracking-tight mb-4 text-white drop-shadow-2xl flex flex-wrap justify-center gap-x-4"
+            >
+              <span>Protect. Investigate.</span>
+            </motion.h1>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="text-[clamp(2.5rem,6vw,5.5rem)] font-bold leading-[1.1] tracking-tight mb-6"
+            >
+              <span className="text-gradient-animated">
+                Assure.
+              </span>
+            </motion.h1>
 
-function FAQItem({ question, answer, isOpen, onClick }: { 
-  question: string; 
-  answer: string; 
-  isOpen: boolean; 
-  onClick: () => void;
-}) {
-  return (
-    <div className="border-b border-white/10 last:border-0">
-      <button
-        onClick={onClick}
-        className="w-full py-6 flex items-center justify-between text-left"
-        data-testid={`faq-${question.slice(0, 20).replace(/\s+/g, '-').toLowerCase()}`}
-      >
-        <span className="text-lg font-medium text-white/90 pr-4">
-          {question}
-        </span>
-        <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-          {isOpen ? (
-            <Minus className="w-5 h-5 text-blue-400" />
-          ) : (
-            <Plus className="w-5 h-5 text-blue-400" />
-          )}
-        </div>
-      </button>
-      <motion.div
-        initial={false}
-        animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="overflow-hidden"
-      >
-        <p className="pb-6 text-white/50 leading-relaxed pr-12">
-          {answer}
-        </p>
-      </motion.div>
-    </div>
-  );
-}
-
-export default function Home() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
-  const [openFAQ, setOpenFAQ] = useState<number>(0);
-
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
-  const heroY = useTransform(scrollYProgress, [0, 0.5], [0, -50]);
-
-  return (
-    <div className="bg-background min-h-screen">
-      {/* Hero Section - GSAP + Framer Motion */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            src={cyberImage1} 
-            alt="Cybersecurity network" 
-            className="absolute inset-0 w-full h-full object-cover opacity-15"
-            data-testid="image-hero"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/85 to-background" />
-          <CyberGrid />
-          <FloatingParticles />
-          <GlowingBlob />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(222,47%,4%)_80%)]" />
-        </div>
-
-        <motion.div
-          style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-          className="relative z-10 max-w-7xl mx-auto px-4 md:px-6"
-        >
-          <div className="grid lg:grid-cols-[1fr,auto] gap-8 lg:gap-16 items-center">
-            {/* Left side - Main content */}
-            <div className="text-center lg:text-left">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-                className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-2 mb-6 md:mb-8"
-              >
-                <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-                <span className="text-blue-400 font-medium text-sm">Trusted by Fortune 500 Enterprises</span>
-              </motion.div>
-              
-              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 md:mb-8 leading-[0.95]">
-                <span className="block text-white">
-                  <TextReveal delay={0.3}>Cyber Protection</TextReveal>
-                </span>
-                <span className="block bg-gradient-to-r from-blue-400 via-blue-300 to-amber-400 bg-clip-text text-transparent">
-                  <TextReveal delay={0.8}>You Can Trust</TextReveal>
-                </span>
-              </h1>
-              
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.4 }}
-                className="text-lg md:text-xl lg:text-2xl text-white/60 max-w-2xl mx-auto lg:mx-0 mb-8 md:mb-10 leading-relaxed"
-              >
-                World-class penetration testing and offensive security for enterprises that demand excellence.
-              </motion.p>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.6 }}
-                className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
-              >
-                <Link href="/contact">
-                  <Button
-                    size="lg"
-                    className="bg-blue-500 text-white font-semibold w-full sm:w-auto"
-                    data-testid="button-hero-contact"
-                  >
-                    Start Your Assessment
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Button>
-                </Link>
-                <Link href="/services">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="border-white/20 bg-white/5 backdrop-blur-sm text-white w-full sm:w-auto"
-                    data-testid="button-hero-services"
-                  >
-                    Explore Services
-                  </Button>
-                </Link>
-              </motion.div>
-            </div>
-
-            {/* Right side - Glassmorphism stat panels */}
-            <div className="hidden lg:grid grid-cols-1 gap-4 w-[280px]">
-              <GlassPanel icon={Shield} title="Security Score" value="99.9%" delay={1.8} />
-              <GlassPanel icon={Users} title="Protected Users" value="10M+" delay={2.0} />
-              <GlassPanel icon={TrendingUp} title="Threats Blocked" value="500K+" delay={2.2} />
-            </div>
-          </div>
-
-          {/* Mobile stat panels with pulse animation */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 2 }}
-            className="lg:hidden grid grid-cols-3 gap-2 mt-8"
-          >
-            {[
-              { value: "99.9%", label: "Security", delay: 0 },
-              { value: "10M+", label: "Protected", delay: 0.2 },
-              { value: "500K+", label: "Threats", delay: 0.4 },
-            ].map((stat) => (
-              <motion.div 
-                key={stat.label}
-                className="text-center p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10"
-                animate={{ 
-                  borderColor: ["rgba(255,255,255,0.1)", "rgba(59,130,246,0.3)", "rgba(255,255,255,0.1)"]
-                }}
-                transition={{ duration: 3, repeat: Infinity, delay: stat.delay }}
-              >
-                <p className="text-lg font-bold text-white">{stat.value}</p>
-                <p className="text-xs text-white/50">{stat.label}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Mobile animated hero image strip */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 2.2 }}
-            className="lg:hidden mt-6 relative rounded-xl overflow-hidden aspect-[21/9]"
-            data-testid="image-hero-mobile-strip"
-          >
-            <img 
-              src={cyberImage2} 
-              alt="Cybersecurity visualization" 
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background" />
-            <div className="absolute inset-0 bg-blue-500/10" />
+            {/* Rotating subtitle */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"
-              animate={{ x: ["-100%", "200%"] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-              style={{ width: "50%" }}
-            />
-            <div className="absolute bottom-2 left-3 flex items-center gap-2">
-              <motion.div
-                className="w-2 h-2 rounded-full bg-green-400"
-                animate={{ scale: [1, 1.3, 1], opacity: [1, 0.6, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 0.8 }}
+              className="text-[17px] md:text-[20px] font-medium leading-[1.6] text-white/50 max-w-[700px] mx-auto mb-10 tracking-tight"
+            >
+              <TypewriterText
+                phrases={[
+                  "From zero-days to advanced persistent threats.",
+                  "Definitive defensive and investigative clarity.",
+                  "Our standards meet international security frameworks.",
+                  "Real-world testing. No automated noise.",
+                ]}
+                typingSpeed={40}
+                pauseDuration={3000}
               />
-              <span className="text-xs text-white/70">Live Threat Monitoring</span>
-            </div>
-          </motion.div>
+            </motion.div>
+
+            {/* CTA buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.5, duration: 0.6 }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-6 pointer-events-auto"
+            >
+              <motion.button
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 0 60px rgba(255,255,255,0.4)",
+                }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsLeadModalOpen(true)}
+                className="w-full sm:w-auto px-10 py-5 rounded-full bg-white text-black font-bold text-[18px] transition-shadow relative overflow-hidden group"
+                data-cursor="cta"
+              >
+                <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                <span className="relative z-10">Talk to a Security Engineer</span>
+              </motion.button>
+              <Link href="/services">
+                <motion.span
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center gap-2 w-full sm:w-auto px-10 py-5 rounded-full border border-white/20 text-white font-bold text-[18px] hover:bg-white/5 active:bg-white/10 transition-colors cursor-pointer bg-black/40 backdrop-blur-xl text-center group"
+                >
+                  Explore Platform
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </motion.span>
+              </Link>
+            </motion.div>
+          </div>
         </motion.div>
 
+        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 2.4 }}
-          className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2"
+          transition={{ delay: 2.5, duration: 1 }}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
         >
+          <span className="text-[8px] font-mono tracking-[0.3em] uppercase text-white/30">
+            Scroll
+          </span>
           <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="text-white/40"
-          >
-            <ChevronDown className="w-6 h-6 md:w-8 md:h-8" />
-          </motion.div>
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="w-[1px] h-6 bg-gradient-to-b from-white/40 to-transparent"
+          />
         </motion.div>
       </section>
 
-      {/* Marquee Trust Band */}
-      <MarqueeBand />
-
-      {/* Client Logos & Recognition */}
-      <ClientLogosSection />
-
-      {/* Stats Section - compact on mobile with particles */}
-      <section className="py-12 md:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-amber-500/5" />
-        <FloatingParticles />
-        <CyberGrid />
-        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-            <AnimatedSection delay={0}>
-              <div className="text-center">
-                <div className="text-3xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-1 md:mb-3">
-                  <AnimatedCounter value={15} suffix="+" />
-                </div>
-                <div className="text-white/50 text-xs md:text-sm uppercase tracking-wider">
-                  Years Experience
-                </div>
-              </div>
-            </AnimatedSection>
-            <AnimatedSection delay={0.1}>
-              <div className="text-center">
-                <div className="text-3xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-1 md:mb-3">
-                  <AnimatedCounter value={500} suffix="+" />
-                </div>
-                <div className="text-white/50 text-xs md:text-sm uppercase tracking-wider">
-                  Enterprises
-                </div>
-              </div>
-            </AnimatedSection>
-            <AnimatedSection delay={0.2}>
-              <div className="text-center">
-                <div className="text-3xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-1 md:mb-3">
-                  <AnimatedCounter value={10000} suffix="+" />
-                </div>
-                <div className="text-white/50 text-xs md:text-sm uppercase tracking-wider">
-                  Vulnerabilities
-                </div>
-              </div>
-            </AnimatedSection>
-            <AnimatedSection delay={0.3}>
-              <div className="text-center">
-                <div className="text-3xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent mb-1 md:mb-3">
-                  99.9<span className="text-xl md:text-3xl">%</span>
-                </div>
-                <div className="text-white/50 text-xs md:text-sm uppercase tracking-wider">
-                  Retention
-                </div>
-              </div>
-            </AnimatedSection>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section - compact on mobile with animations */}
-      <section className="py-16 md:py-32 relative">
-        <div className="absolute inset-0">
-          <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[150px]" />
-        </div>
-        <FloatingParticles />
-        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-          <AnimatedSection className="text-center mb-10 md:mb-20">
-            <p className="text-blue-400 font-medium mb-2 md:mb-4 tracking-widest uppercase text-xs md:text-sm">
-              Our Services
-            </p>
-            <h2 className="text-2xl md:text-5xl font-bold mb-3 md:mb-6">
-              Advanced Threat Detection
+      {/* ===== SECURING THE DIGITAL CORE ===== */}
+      <section className="py-12 sm:py-[100px] bg-[#030303] relative z-20 border-b border-white/5 text-center px-6">
+        <div className="max-w-[800px] mx-auto">
+          <MaskReveal direction="up">
+            <h2 className="text-[28px] sm:text-[40px] font-semibold tracking-tight text-white mb-6 leading-tight">
+              Securing the Digital Core
             </h2>
-            <p className="text-sm md:text-xl text-white/50 max-w-2xl mx-auto">
-              From application security to red team operations, we cover every attack surface.
+          </MaskReveal>
+          <AnimatedSection delay={0.2}>
+            <p className="text-[16px] sm:text-[19px] text-white/50 max-w-[650px] mx-auto leading-relaxed">
+              Your infrastructure shouldn't be a guessing game. We provide
+              specialized VAPT and Digital Forensics to help you identify gaps
+              before they become breaches. Real-world testing. No fluff.
             </p>
-          </AnimatedSection>
-
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
-            {services.map((service, index) => (
-              <AnimatedSection key={service.title} delay={index * 0.05}>
-                <GlassCard className="p-4 md:p-8 h-full">
-                  <motion.div 
-                    className="w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-500/20 to-amber-500/10 flex items-center justify-center mb-3 md:mb-6"
-                    animate={{ 
-                      boxShadow: ["0 0 0 0 rgba(59,130,246,0)", "0 0 20px 3px rgba(59,130,246,0.3)", "0 0 0 0 rgba(59,130,246,0)"]
-                    }}
-                    transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.2 }}
-                  >
-                    <service.icon className="w-5 h-5 md:w-8 md:h-8 text-blue-400" />
-                  </motion.div>
-                  <h3 className="text-sm md:text-xl font-semibold mb-1 md:mb-3 text-white">
-                    {service.title}
-                  </h3>
-                  <p className="text-xs md:text-base text-white/50 leading-relaxed hidden md:block">
-                    {service.description}
-                  </p>
-                </GlassCard>
-              </AnimatedSection>
-            ))}
-          </div>
-
-          <AnimatedSection className="text-center mt-12" delay={0.6}>
-            <Link href="/services">
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-white/20 bg-white/5 text-white"
-                data-testid="button-view-all-services"
-              >
-                View All Services
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Button>
-            </Link>
           </AnimatedSection>
         </div>
       </section>
 
-      {/* Why Choose Us Section - compact on mobile */}
-      <section className="py-16 md:py-32 relative">
-        <div className="absolute inset-0">
-          <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[150px]" />
+      {/* ===== EXPERTISE CAPABILITIES — Draggable Marquee ===== */}
+      <section className="capabilities-container py-16 sm:py-[120px] bg-[#020202] text-center relative z-10 border-b border-white/5 overflow-hidden">
+        <div className="max-w-full mx-auto px-6 mb-12">
+          <ScaleReveal>
+            <h2 className="text-[20px] font-bold text-white/40 tracking-[0.3em] uppercase">
+              Our Expertise
+            </h2>
+          </ScaleReveal>
         </div>
-        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-center">
-            <AnimatedSection>
-              <p className="text-blue-400 font-medium mb-2 md:mb-4 tracking-widest uppercase text-xs md:text-sm">
-                Why Secventra
-              </p>
-              <h2 className="text-2xl md:text-5xl font-bold mb-3 md:mb-6">
-                Driving Growth with Our Expertise
-              </h2>
-              <p className="text-sm md:text-xl text-white/50 mb-4 md:mb-8 leading-relaxed">
-                Our team of elite security researchers brings decades of combined experience.
-              </p>
-              <div className="space-y-3 md:space-y-6">
-                {[
-                  { icon: Lock, title: "Your Digital Shield", description: "Comprehensive protection" },
-                  { icon: Eye, title: "Experts in Security", description: "Industry-leading specialists" },
-                  { icon: Zap, title: "Rapid Response", description: "24/7 monitoring" },
-                ].map((item, index) => (
-                  <AnimatedText key={item.title} delay={index * 0.05}>
-                    <div className="flex items-center gap-3 md:gap-4">
-                      <motion.div 
-                        className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-gradient-to-br from-blue-500/20 to-amber-500/10 flex items-center justify-center flex-shrink-0"
-                        animate={{ scale: [1, 1.05, 1] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
-                      >
-                        <item.icon className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
-                      </motion.div>
-                      <div>
-                        <h4 className="text-sm md:text-base font-semibold text-white">{item.title}</h4>
-                        <p className="text-xs md:text-sm text-white/50">{item.description}</p>
+
+        {/* Interactive Infinite Marquee */}
+        <div className="relative flex overflow-hidden group/marquee cursor-grab active:cursor-grabbing">
+          <motion.div
+            drag="x"
+            dragConstraints={{ left: -2000, right: 0 }}
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+            whileHover={{ transition: { duration: 80 } }}
+            className="flex gap-6 px-6"
+          >
+            {[...expertise, ...expertise, ...expertise, ...expertise].map(
+              (cap, i) => (
+                <div
+                  key={i}
+                  className="capability-card h-full w-[300px] sm:w-[400px] shrink-0 pointer-events-auto"
+                >
+                  <TiltCard className="h-full">
+                    <div className="glass-panel rounded-[32px] p-10 text-left h-full flex flex-col transition-all hover:bg-white/[0.03] active:scale-[0.99] group overflow-hidden relative border border-white/5 hover:border-white/15 bg-gradient-to-br from-white/[0.02] to-transparent">
+                      {/* Background Glow */}
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+                      <div className="w-20 h-20 rounded-2xl bg-white/5 flex items-center justify-center mb-8 border border-white/10 relative z-10 overflow-hidden shadow-inner group-hover:border-white/20 transition-colors">
+                        <img
+                          src={cap.image}
+                          alt={cap.title}
+                          className="w-16 h-16 object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] group-hover:scale-125 transition-transform duration-700"
+                        />
                       </div>
-                    </div>
-                  </AnimatedText>
-                ))}
-              </div>
 
-              {/* Mobile-only compact image */}
-              <div className="mt-6 md:hidden">
-                <motion.div
-                  className="relative rounded-xl overflow-hidden aspect-video"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  data-testid="image-datacenter-mobile"
-                >
-                  <img 
-                    src={dataCenterImage} 
-                    alt="Secure data center" 
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-                  <div className="absolute bottom-3 left-3 flex items-center gap-2">
-                    <motion.div
-                      animate={{ scale: [1, 1.1, 1] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                      <Shield className="w-5 h-5 text-blue-400" />
-                    </motion.div>
-                    <span className="text-xs font-semibold text-white">Enterprise Grade Security</span>
-                  </div>
-                </motion.div>
-              </div>
-            </AnimatedSection>
-
-            <AnimatedSection delay={0.2} className="hidden md:block">
-              <GlassCard className="p-1 overflow-visible" hover={false}>
-                <div className="aspect-[4/3] rounded-xl relative overflow-hidden" data-testid="image-datacenter">
-                  <img 
-                    src={dataCenterImage} 
-                    alt="Secure data center" 
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-                  <div className="absolute inset-0 bg-blue-500/10" />
-                  <motion.div
-                    className="absolute bottom-6 left-6 right-6"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <div className="flex items-center gap-3 mb-2">
-                      <Shield className="w-8 h-8 text-blue-400" />
-                      <p className="text-xl font-bold text-white">Enterprise Grade</p>
+                      <h3 className="text-[22px] sm:text-[26px] font-bold mb-4 text-white tracking-tight leading-tight relative z-10 group-hover:text-white transition-colors">
+                        {cap.title}
+                      </h3>
+                      <p className="text-[16px] text-white/40 leading-[1.6] mb-8 flex-grow relative z-10">
+                        {cap.description}
+                      </p>
+                      <Link href={cap.href}>
+                        <button className="text-white/60 text-[14px] font-bold flex items-center gap-2 w-fit group/btn relative z-10 uppercase tracking-[0.2em] hover:gap-3 hover:text-white transition-all">
+                          Explore{" "}
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </Link>
                     </div>
-                    <p className="text-white/60">Secure infrastructure trusted by Fortune 500</p>
-                  </motion.div>
+                  </TiltCard>
                 </div>
-              </GlassCard>
-            </AnimatedSection>
-          </div>
+              )
+            )}
+          </motion.div>
         </div>
       </section>
 
-      {/* Testimonials Section - show only 1 on mobile */}
-      <section className="py-16 md:py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent" />
-        <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-          <AnimatedSection className="text-center mb-8 md:mb-16">
-            <p className="text-blue-400 font-medium mb-2 md:mb-4 tracking-widest uppercase text-xs md:text-sm">
-              Client Testimonials
-            </p>
-            <h2 className="text-2xl md:text-5xl font-bold">
-              Unmatched Service & Protection
-            </h2>
-          </AnimatedSection>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            {testimonials.slice(0, 1).map((testimonial, index) => (
-              <AnimatedSection key={index} delay={index * 0.1} className="md:hidden">
-                <GlassCard className="p-5 h-full flex flex-col relative">
-                  <Quote className="w-8 h-8 text-blue-400/20 mb-3" />
-                  <p className="text-white/70 leading-relaxed flex-1 mb-4 text-sm">
-                    "{testimonial.quote}"
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <Avatar className="w-10 h-10 bg-gradient-to-br from-blue-500/30 to-amber-500/20">
-                      <AvatarFallback className="bg-transparent text-sm font-bold text-white">
-                        {testimonial.author[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="text-sm font-semibold text-white">{testimonial.author}</div>
-                      <div className="text-white/40 text-xs">{testimonial.role}</div>
-                    </div>
-                  </div>
-                </GlassCard>
-              </AnimatedSection>
-            ))}
-            {testimonials.map((testimonial, index) => (
-              <AnimatedSection key={index} delay={index * 0.1} className="hidden md:block">
-                <GlassCard className="p-8 h-full flex flex-col relative">
-                  <Quote className="w-10 h-10 text-blue-400/20 mb-4" />
-                  <p className="text-white/70 leading-relaxed flex-1 mb-6 text-lg">
-                    "{testimonial.quote}"
-                  </p>
-                  <div className="flex items-center gap-4">
-                    <Avatar className="w-12 h-12 bg-gradient-to-br from-blue-500/30 to-amber-500/20">
-                      <AvatarFallback className="bg-transparent text-lg font-bold text-white">
-                        {testimonial.author[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="font-semibold text-white">{testimonial.author}</div>
-                      <div className="text-white/40 text-sm">{testimonial.role}, {testimonial.company}</div>
-                    </div>
-                  </div>
-                </GlassCard>
-              </AnimatedSection>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team Section - hidden on mobile for less scroll */}
-      <section className="hidden md:block py-32 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[120px]" />
-        </div>
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <AnimatedSection>
-              <div className="relative rounded-2xl overflow-hidden" data-testid="image-team">
-                <img 
-                  src={teamImage} 
-                  alt="Secventra security team" 
-                  className="w-full h-auto object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent" />
-                <div className="absolute inset-0 bg-blue-500/5" />
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background to-transparent"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
+      {/* ===== LIVE THREAT GLOBE SECTION ===== */}
+      <section
+        ref={globeSectionRef}
+        className="py-16 sm:py-[120px] bg-[#020202] relative z-10 border-b border-white/5 overflow-hidden"
+      >
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-24 items-center">
+            {/* Globe visualization */}
+            <ScaleReveal>
+              <div className="aspect-square relative rounded-[32px] overflow-hidden border border-white/5 bg-black/50">
+                <ThreeCanvas
+                  camera={{ position: [0, 0, 8], fov: 45 }}
+                  controls={false}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="flex -space-x-3">
-                      {["S", "M", "A"].map((initial, i) => (
-                        <Avatar key={i} className="w-10 h-10 border-2 border-background bg-gradient-to-br from-blue-500/40 to-amber-500/30">
-                          <AvatarFallback className="bg-transparent text-white text-sm font-semibold">{initial}</AvatarFallback>
-                        </Avatar>
-                      ))}
-                    </div>
-                    <p className="text-white/70 text-sm">50+ Elite Security Researchers</p>
-                  </div>
-                </motion.div>
+                  <ambientLight intensity={0.5} />
+                  <directionalLight
+                    position={[10, 10, 10]}
+                    intensity={1}
+                    color="#ffffff"
+                  />
+                  <group scale={isMobile ? 1.8 : 2.2}>
+                    <CyberGlobeContent globeRadius={2} />
+                  </group>
+                </ThreeCanvas>
+
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#020202] via-transparent to-transparent pointer-events-none" />
+
+                {/* Status indicators */}
+                <div className="absolute bottom-4 left-4 flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-[9px] font-mono tracking-wider text-white/40 uppercase">
+                    Live Threat Map
+                  </span>
+                </div>
               </div>
-            </AnimatedSection>
-            
-            <AnimatedSection delay={0.2}>
-              <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
-                Our Team
-              </p>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                World-Class Security<br />Professionals
-              </h2>
-              <p className="text-xl text-white/50 mb-8 leading-relaxed">
-                Our team includes former NSA analysts, Big Four consultants, and bug bounty legends who have found vulnerabilities in the world's largest companies.
-              </p>
-              <div className="grid grid-cols-2 gap-6" data-testid="team-stats-grid">
+            </ScaleReveal>
+
+            {/* Content */}
+            <div>
+              <AnimatedSection>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-[2px] bg-white/30" />
+                  <span className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/40">
+                    Global Intelligence
+                  </span>
+                </div>
+                <h2 className="text-[36px] md:text-[48px] font-bold tracking-tight text-white leading-[1.1] mb-6">
+                  Real-Time Threat
+                  <br />
+                  <span className="text-gradient-animated">Monitoring</span>
+                </h2>
+                <p className="text-[17px] text-white/50 leading-relaxed mb-8">
+                  Our global sensor network tracks attack patterns across 300+
+                  points of presence. Every arc on the globe represents real
+                  threat intelligence being processed and neutralized.
+                </p>
+              </AnimatedSection>
+
+              <StaggerChildren className="space-y-4" stagger={0.1} delay={0.3}>
                 {[
-                  { value: "50+", label: "Security Experts", id: "experts" },
-                  { value: "200+", label: "Certifications", id: "certs" },
-                  { value: "15", label: "Countries", id: "countries" },
-                  { value: "$10M+", label: "Bounties Earned", id: "bounties" },
-                ].map((stat, index) => (
-                  <motion.div
-                    key={stat.label}
-                    className="text-center p-4 rounded-xl bg-white/5 border border-white/10"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * index }}
-                    data-testid={`stat-team-${stat.id}`}
-                  >
-                    <div className="text-2xl font-bold text-blue-400 mb-1">{stat.value}</div>
-                    <div className="text-white/50 text-sm">{stat.label}</div>
-                  </motion.div>
+                  "Advanced Persistent Threat tracking",
+                  "Real-time attack pattern correlation",
+                  "Geolocation-based threat intelligence",
+                  "Automated containment protocols",
+                ].map((item, i) => (
+                  <StaggerItem key={i}>
+                    <div className="flex items-center gap-3 text-[15px] text-white/60 group hover:text-white/80 transition-colors">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400/60 group-hover:bg-emerald-400 transition-colors" />
+                      {item}
+                    </div>
+                  </StaggerItem>
                 ))}
-              </div>
-            </AnimatedSection>
+              </StaggerChildren>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ Section - compact on mobile, fewer items */}
-      <section className="py-16 md:py-32 relative">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
-          <AnimatedSection className="text-center mb-8 md:mb-16">
-            <p className="text-blue-400 font-medium mb-2 md:mb-4 tracking-widest uppercase text-xs md:text-sm">
-              FAQ
-            </p>
-            <h2 className="text-2xl md:text-5xl font-bold">
-              Frequently Asked Questions
+      {/* ===== STANDARDS & CERTIFICATIONS ===== */}
+      <section className="py-16 sm:py-[120px] bg-[#030303] px-6 relative z-10">
+        <div className="max-w-[1200px] mx-auto">
+          <MaskReveal className="text-center mb-16" direction="up">
+            <h2 className="text-[28px] sm:text-[40px] font-semibold tracking-tight text-white">
+              Audited Against Elite Global Standards
             </h2>
-          </AnimatedSection>
+          </MaskReveal>
 
-          <AnimatedSection delay={0.1}>
-            <GlassCard className="p-4 md:p-8" hover={false}>
-              {faqs.slice(0, 2).map((faq, index) => (
-                <div key={index} className="md:hidden">
-                  <FAQItem
-                    question={faq.question}
-                    answer={faq.answer}
-                    isOpen={openFAQ === index}
-                    onClick={() => setOpenFAQ(openFAQ === index ? -1 : index)}
-                  />
-                </div>
-              ))}
-              {faqs.map((faq, index) => (
-                <div key={index} className="hidden md:block">
-                  <FAQItem
-                    question={faq.question}
-                    answer={faq.answer}
-                    isOpen={openFAQ === index}
-                    onClick={() => setOpenFAQ(openFAQ === index ? -1 : index)}
-                  />
-                </div>
-              ))}
-            </GlassCard>
-          </AnimatedSection>
+          <StaggerChildren
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+            stagger={0.08}
+          >
+            {standards.map((std, i) => (
+              <StaggerItem key={i}>
+                <motion.div
+                  whileHover={{ y: -5, borderColor: "rgba(255,255,255,0.15)" }}
+                  className="bg-white/[0.02] border border-white/5 rounded-[24px] p-8 hover:bg-white/[0.04] transition-all duration-500 group h-full"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-white/20 transition-colors">
+                      <Shield className="w-5 h-5 text-white/60 group-hover:text-white transition-colors" />
+                    </div>
+                    <h3 className="text-[18px] font-bold text-white tracking-tight">
+                      {std.title}
+                    </h3>
+                  </div>
+                  <p className="text-[14px] text-white/40 leading-relaxed group-hover:text-white/55 transition-colors">
+                    {std.description}
+                  </p>
+                </motion.div>
+              </StaggerItem>
+            ))}
+          </StaggerChildren>
         </div>
       </section>
 
-      {/* CTA Section - compact on mobile */}
-      <section className="py-16 md:py-32 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            src={cyberImage2} 
-            alt="Cybersecurity background" 
-            className="absolute inset-0 w-full h-full object-cover opacity-10"
-            data-testid="image-cta"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
-          <CyberGrid />
-        </div>
-        <div className="max-w-4xl mx-auto px-4 md:px-6 text-center relative z-10">
-          <AnimatedSection>
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="mb-4 md:mb-8"
-              data-testid="icon-cta-shield"
-            >
-              <div className="w-14 h-14 md:w-20 md:h-20 mx-auto rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-500/30 to-amber-500/20 flex items-center justify-center mb-4 md:mb-6">
-                <Shield className="w-7 h-7 md:w-10 md:h-10 text-blue-400" aria-label="Security shield" />
-              </div>
-            </motion.div>
-            <h2 className="text-2xl md:text-6xl font-bold mb-3 md:mb-6">
-              Ready to Secure Your Assets?
-            </h2>
-            <p className="text-sm md:text-xl text-white/50 mb-6 md:mb-12 max-w-2xl mx-auto">
-              Join the world's most security-conscious enterprises.
-            </p>
-            <motion.div 
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              <Link href="/contact">
-                <Button
-                  size="lg"
-                  className="bg-blue-500 text-white font-semibold"
-                  data-testid="button-cta-contact"
-                >
-                  Schedule a Consultation
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
-              <Link href="/case-studies">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-white/20 bg-white/5 text-white"
-                  data-testid="button-cta-case-studies"
-                >
-                  View Case Studies
-                </Button>
-              </Link>
-            </motion.div>
-          </AnimatedSection>
+      {/* ===== STATS SECTION — Spring Physics Counters ===== */}
+      <section className="py-10 sm:py-24 bg-[#020202] border-y border-white/5 relative z-10 overflow-hidden">
+        {/* Background grid */}
+        <div
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: "60px 60px",
+          }}
+        />
+
+        <div className="max-w-[1200px] mx-auto px-6 relative z-10">
+          <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-12 text-center overflow-x-auto snap-x snap-mandatory pb-8 -mx-6 px-6 sm:mx-0 sm:px-0 sm:pb-0 hide-scrollbar">
+            {stats.map((stat, i) => (
+              <AnimatedStat key={i} {...stat} index={i} />
+            ))}
+          </div>
         </div>
       </section>
+
+      <LeadModal
+        isOpen={isLeadModalOpen}
+        onOpenChange={setIsLeadModalOpen}
+        title="Get a Free Security Strategy"
+        description="Schedule a technical scoping call with our security engineers."
+      />
     </div>
   );
 }

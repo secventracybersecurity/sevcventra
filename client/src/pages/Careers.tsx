@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection, GlassCard } from "@/components/AnimatedSection";
+import { LeadModal } from "@/components/LeadModal";
 
 const benefits = [
   {
@@ -101,7 +102,7 @@ const openPositions = [
   },
 ];
 
-function JobCard({ job }: { job: typeof openPositions[0] }) {
+function JobCard({ job, onApply }: { job: typeof openPositions[0], onApply: () => void }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -146,7 +147,7 @@ function JobCard({ job }: { job: typeof openPositions[0] }) {
       >
         <div className="px-6 pb-6 border-t border-white/5 pt-6">
           <p className="text-white/60 mb-6">{job.description}</p>
-          
+
           <h4 className="text-sm font-semibold text-white/40 uppercase tracking-wider mb-4">
             Requirements
           </h4>
@@ -159,15 +160,14 @@ function JobCard({ job }: { job: typeof openPositions[0] }) {
             ))}
           </ul>
 
-          <Link href="/contact">
-            <Button
-              className="bg-blue-500 text-black font-semibold"
-              data-testid={`button-apply-${job.id}`}
-            >
-              Apply Now
-              <ArrowRight className="ml-2 w-4 h-4" />
-            </Button>
-          </Link>
+          <Button
+            onClick={onApply}
+            className="bg-blue-500 text-black font-semibold"
+            data-testid={`button-apply-${job.id}`}
+          >
+            Apply Now
+            <ArrowRight className="ml-2 w-4 h-4" />
+          </Button>
         </div>
       </motion.div>
     </GlassCard>
@@ -175,6 +175,7 @@ function JobCard({ job }: { job: typeof openPositions[0] }) {
 }
 
 export default function Careers() {
+  const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -185,11 +186,11 @@ export default function Careers() {
   const heroY = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="bg-transparent min-h-screen">
       <section ref={heroRef} className="relative min-h-[70vh] flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/10 via-transparent to-transparent" />
-          <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-[128px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-500/10 via-transparent to-transparent" />
+          <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-gray-500/10 rounded-full blur-[128px]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_70%)]" />
         </div>
 
@@ -201,7 +202,7 @@ export default function Careers() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-indigo-400 font-medium mb-6 tracking-widest uppercase text-sm"
+            className="text-gray-400 font-medium mb-6 tracking-widest uppercase text-sm"
           >
             Join Our Team
           </motion.p>
@@ -212,7 +213,7 @@ export default function Careers() {
             className="text-5xl md:text-7xl font-bold tracking-tight mb-8"
           >
             Build the Future of<br />
-            <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 to-gray-400 bg-clip-text text-transparent">
               Cybersecurity
             </span>
           </motion.h1>
@@ -240,7 +241,7 @@ export default function Careers() {
             {benefits.map((benefit, index) => (
               <AnimatedSection key={benefit.title} delay={index * 0.1}>
                 <GlassCard className="p-6 text-center h-full">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center mx-auto mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-gray-500/20 flex items-center justify-center mx-auto mb-4">
                     <benefit.icon className="w-6 h-6 text-blue-400" />
                   </div>
                   <h3 className="font-semibold mb-2">{benefit.title}</h3>
@@ -253,7 +254,7 @@ export default function Careers() {
       </section>
 
       <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-indigo-500/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-500/5 to-transparent" />
         <div className="max-w-4xl mx-auto px-6 relative z-10">
           <AnimatedSection className="text-center mb-16">
             <p className="text-blue-400 font-medium mb-4 tracking-widest uppercase text-sm">
@@ -265,7 +266,7 @@ export default function Careers() {
           <div className="space-y-4">
             {openPositions.map((job, index) => (
               <AnimatedSection key={job.id} delay={index * 0.1}>
-                <JobCard job={job} />
+                <JobCard job={job} onApply={() => setIsLeadModalOpen(true)} />
               </AnimatedSection>
             ))}
           </div>
@@ -281,19 +282,24 @@ export default function Careers() {
             <p className="text-xl text-white/50 mb-12 max-w-2xl mx-auto">
               We're always looking for exceptional talent. Send us your resume and tell us how you can contribute.
             </p>
-            <Link href="/contact">
-              <Button
-                size="lg"
-                className="bg-blue-500 text-black font-semibold"
-                data-testid="button-careers-contact"
-              >
-                Get in Touch
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
+            <Button
+              onClick={() => setIsLeadModalOpen(true)}
+              size="lg"
+              className="bg-blue-500 text-black font-semibold"
+              data-testid="button-careers-contact"
+            >
+              Get in Touch
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
           </AnimatedSection>
         </div>
       </section>
+
+      <LeadModal
+        isOpen={isLeadModalOpen}
+        onOpenChange={setIsLeadModalOpen}
+        title="Join the Elite Team"
+      />
     </div>
   );
 }

@@ -1,283 +1,207 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import { Link } from "wouter";
-import {
-  Globe,
-  Shield,
+import { motion } from "framer-motion";
+import { 
+  Shield, 
+  Terminal, 
+  Lock, 
+  Activity, 
+  Search, 
+  Target, 
+  FileText,
+  MousePointer2,
+  Database,
   Cloud,
   Network,
-  Smartphone,
-  Target,
-  ArrowRight,
-  Check,
-  Code,
-  Lock,
-  Search,
-  FileWarning,
-  Server,
-  Layers
+  Smartphone
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { AnimatedSection, GlassCard } from "@/components/AnimatedSection";
+import { Link } from "wouter";
+import { useState, useLayoutEffect, useRef } from "react";
+import { gsap } from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+import { LeadModal } from "@/components/LeadModal";
+import { AnimatedSection, BlurRevealText } from "@/components/AnimatedSection";
+import { CyberBackgroundSuite } from "@/components/CyberTacticalHero";
+import { ModernServiceCard } from "@/components/ModernServiceCard";
 
-const services = [
+type VisualVariant = "liquid" | "radar" | "shards" | "pulse";
+
+const detailedServices: {
+    title: string;
+    id: string;
+    shortDesc: string;
+    description: string;
+    features: string[];
+    image: string;
+    href?: string;
+}[] = [
   {
-    id: "web",
-    icon: Globe,
-    title: "Web Application Pentesting",
-    tagline: "Secure Your Digital Frontline",
-    description: "Comprehensive security assessment of your web applications using manual testing techniques and custom tools to uncover vulnerabilities that automated scanners miss.",
-    features: [
-      "OWASP Top 10 vulnerability assessment",
-      "Business logic flaw detection",
-      "Authentication & session management testing",
-      "Input validation & injection testing",
-      "API endpoint security review",
-      "Source code review (optional)",
-    ],
-    methodology: ["Reconnaissance", "Mapping", "Discovery", "Exploitation", "Reporting"],
-    gradient: "from-blue-500/20 to-blue-500/20",
+    image: "/assets/web_security_3d.png",
+    title: "Vulnerability Assessment & Penetration Testing",
+    id: "vapt",
+    shortDesc: "Real-world attack simulations.",
+    description: "We simulate real-world attacks to find cracks in your Web, Mobile, and Cloud environments. We don't just find bugs; we show you how to fix them.",
+    features: ["Web Application Pentesting", "Mobile App Security", "Cloud & Network VAPT", "API Endpoint Audits"],
+    href: "/services/web-app-pentesting"
   },
   {
-    id: "api",
-    icon: Code,
-    title: "API Security Testing",
-    tagline: "Protect Your Digital Backbone",
-    description: "Deep analysis of REST, GraphQL, and SOAP APIs to identify authentication flaws, data exposure risks, and injection vulnerabilities.",
-    features: [
-      "Authentication & authorization testing",
-      "Rate limiting & throttling analysis",
-      "Data exposure assessment",
-      "Injection vulnerability testing",
-      "API versioning security review",
-      "Documentation & schema analysis",
-    ],
-    methodology: ["Discovery", "Authentication", "Authorization", "Injection", "Logic"],
-    gradient: "from-purple-500/20 to-pink-500/20",
+    image: "/assets/threat_3d.png",
+    title: "Incident Response & Digital Forensics",
+    id: "ir-df",
+    shortDesc: "Stop the bleeding. Find the root cause.",
+    description: "A breach is a crisis we provide the clarity. We handle Incident Response to stop the bleeding and Digital Forensics to preserve evidence and find 'Patient Zero'.",
+    features: ["24/7 Emergency Containment", "Malware Reverse Engineering", "Court-Admissible Forensics", "Threat Eradication"],
+    href: "/services/digital-forensics"
   },
   {
-    id: "cloud",
-    icon: Cloud,
-    title: "Cloud Security Assessment",
-    tagline: "Secure Your Cloud Infrastructure",
-    description: "Comprehensive security assessment of AWS, Azure, and GCP environments to identify misconfigurations and security gaps.",
-    features: [
-      "IAM policy review & privilege escalation testing",
-      "Storage bucket security assessment",
-      "Network security group analysis",
-      "Secrets management review",
-      "Container & Kubernetes security",
-      "Serverless function security",
-    ],
-    methodology: ["Inventory", "Configuration", "Access", "Data", "Monitoring"],
-    gradient: "from-amber-500/20 to-blue-500/20",
+    image: "/assets/cloud_3d.png",
+    title: "Audits & Compliance",
+    id: "compliance",
+    shortDesc: "Get audit-ready with elite standards.",
+    description: "Get audit-ready. We align your infrastructure with ISO 27001, GDPR, HiPAA and NIST standards so you can close bigger deals with confidence.",
+    features: ["ISO 27001 Readiness", "GDPR/HIPAA Compliance", "NIST Framework Alignment", "DevSecOps Integration"],
+    href: "/services/compliance-audit"
   },
   {
-    id: "network",
-    icon: Network,
-    title: "Network Penetration Testing",
-    tagline: "Defend Your Perimeter",
-    description: "Internal and external network penetration testing to identify vulnerabilities in your network infrastructure and security controls.",
-    features: [
-      "External perimeter testing",
-      "Internal network assessment",
-      "Wireless security testing",
-      "Firewall & IDS/IPS bypass testing",
-      "Active Directory security review",
-      "Lateral movement simulation",
-    ],
-    methodology: ["Scanning", "Enumeration", "Exploitation", "Pivoting", "Persistence"],
-    gradient: "from-orange-500/20 to-red-500/20",
-  },
-  {
-    id: "mobile",
-    icon: Smartphone,
-    title: "Mobile Application Pentesting",
-    tagline: "Secure Mobile-First Experiences",
-    description: "In-depth security assessment of iOS and Android applications, including static and dynamic analysis.",
-    features: [
-      "Static & dynamic analysis",
-      "Binary protection assessment",
-      "Data storage security review",
-      "Network communication analysis",
-      "Authentication mechanism testing",
-      "Third-party library assessment",
-    ],
-    methodology: ["Static Analysis", "Dynamic Testing", "Network", "Storage", "Crypto"],
-    gradient: "from-indigo-500/20 to-violet-500/20",
-  },
-  {
-    id: "red-team",
-    icon: Target,
-    title: "Red Team Operations",
-    tagline: "Test Your Complete Defense",
-    description: "Full-scope adversarial simulation that tests your people, processes, and technology against real-world attack scenarios.",
-    features: [
-      "Social engineering campaigns",
-      "Physical security assessment",
-      "Advanced persistent threat simulation",
-      "Detection & response testing",
-      "Purple team exercises",
-      "Executive tabletop exercises",
-    ],
-    methodology: ["Reconnaissance", "Weaponization", "Delivery", "Exploitation", "Actions"],
-    gradient: "from-red-500/20 to-rose-500/20",
+    image: "/assets/network_3d.png",
+    title: "Training & Security Awareness",
+    id: "training",
+    shortDesc: "Harden your human perimeter.",
+    description: "Turn your employees into your strongest defense. We run Phishing Simulations and social engineering tests that actually stick.",
+    features: ["Targeted Phishing Campaigns", "Executive Whaling Tests", "Physical Breach Simulations", "Interactive Security Training"],
+    href: "/services/training-awareness"
   },
 ];
 
 export default function Services() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
+  const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+    
+    const ctx = gsap.context(() => {
+      // Magnetic effect for the hero text
+      gsap.to(".service-hero-text", {
+        scrollTrigger: {
+          trigger: ".service-hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+        y: 100,
+        opacity: 0,
+        scale: 0.9,
+      });
+
+      // Background atmosphere shift
+      gsap.to(".atmosphere-bg", {
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: true,
+        },
+        rotate: 15,
+        opacity: 0.3,
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <div className="bg-background min-h-screen">
-      <section ref={heroRef} className="relative min-h-[70vh] flex items-center justify-center overflow-hidden pt-20">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-transparent to-transparent" />
-          <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-[128px]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_70%)]" />
+    <div className="bg-[#050505] text-white min-h-screen font-sans selection:bg-primary/30 overflow-x-hidden relative" ref={containerRef}>
+      
+      {/* Universal Tactical Background Suite */}
+      <CyberBackgroundSuite opacity={0.4} showHUD={false} />
+      
+      {/* Hero Section */}
+      <section className="service-hero relative min-h-[90vh] flex flex-col items-center justify-center bg-transparent px-6 overflow-hidden pt-20 z-10">
+        <div className="service-hero-text max-w-[1024px] mx-auto z-10 text-center pointer-events-none relative">
+          <BlurRevealText 
+            text="Elite Intelligence." 
+            className="text-[36px] sm:text-[64px] md:text-[100px] font-bold leading-[0.95] tracking-tighter mb-6 text-white text-glow-white flex justify-center w-full" 
+          />
+          <BlurRevealText 
+            text="Autonomous Proof." 
+            className="text-[36px] sm:text-[64px] md:text-[100px] font-bold leading-[0.95] tracking-tighter mb-8 text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-800 flex justify-center w-full" 
+          />
+          <p className="text-[18px] md:text-[24px] font-medium leading-[1.4] text-gray-400 max-w-[700px] mx-auto tracking-tight">
+            We don't just run scans. Our red team engineers build sophisticated, real-world attack simulations to verify your true security posture.
+          </p>
         </div>
-
-        <motion.div
-          style={{ opacity: heroOpacity, y: heroY }}
-          className="relative z-10 max-w-4xl mx-auto px-6 text-center"
-        >
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-blue-400 font-medium mb-6 tracking-widest uppercase text-sm"
-          >
-            Our Services
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold tracking-tight mb-8"
-          >
-            Comprehensive<br />
-            <span className="bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent">
-              Security Solutions
-            </span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-xl text-white/60 max-w-2xl mx-auto"
-          >
-            From web applications to red team operations, we provide end-to-end security assessment services.
-          </motion.p>
-        </motion.div>
       </section>
 
-      {services.map((service, index) => (
-        <section
-          key={service.id}
-          id={service.id}
-          className="py-32 relative overflow-hidden"
-        >
-          <div className="absolute inset-0">
-            <div className={`absolute ${index % 2 === 0 ? 'left-0' : 'right-0'} top-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br ${service.gradient} rounded-full blur-[150px] opacity-30`} />
-          </div>
-
-          <div className="max-w-7xl mx-auto px-6 relative z-10">
-            <div className={`grid lg:grid-cols-2 gap-16 items-center ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
-              <AnimatedSection className={index % 2 === 1 ? 'lg:order-2' : ''}>
-                <div className="flex items-center gap-4 mb-6">
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center`}>
-                    <service.icon className="w-7 h-7 text-white" />
-                  </div>
-                  <span className="text-white/40 font-mono text-sm">0{index + 1}</span>
+      {/* Modern Platform Features */}
+      <section className="services-list py-[160px] bg-transparent px-6 z-10 relative">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="mb-40">
+             <AnimatedSection>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-[2px] bg-primary" />
+                  <span className="text-[14px] font-bold tracking-[0.3em] uppercase text-primary">Operational Spectrum</span>
                 </div>
-                <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                  {service.title}
+                <h2 className="text-[48px] md:text-[72px] font-bold tracking-tighter dark:text-white leading-[1.05]">
+                  Engineered to identify.<br/>
+                  Deployed to defend.
                 </h2>
-                <p className="text-blue-400 font-medium mb-6">{service.tagline}</p>
-                <p className="text-lg text-white/60 mb-8 leading-relaxed">
-                  {service.description}
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-                  {service.features.map((feature) => (
-                    <div key={feature} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                      <span className="text-white/70 text-sm">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <Link href="/contact">
-                  <Button
-                    className="bg-blue-500 text-black font-semibold"
-                    data-testid={`button-service-${service.id}`}
-                  >
-                    Request Assessment
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </Link>
-              </AnimatedSection>
-
-              <AnimatedSection delay={0.2} className={index % 2 === 1 ? 'lg:order-1' : ''}>
-                <GlassCard className="p-8" hover={false}>
-                  <h4 className="text-sm font-semibold text-white/40 uppercase tracking-wider mb-6">
-                    Methodology
-                  </h4>
-                  <div className="space-y-4">
-                    {service.methodology.map((step, stepIndex) => (
-                      <motion.div
-                        key={step}
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: stepIndex * 0.1 }}
-                        viewport={{ once: true }}
-                        className="flex items-center gap-4"
-                      >
-                        <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-blue-400 font-mono text-sm">
-                          {stepIndex + 1}
-                        </div>
-                        <div className="flex-1 h-px bg-gradient-to-r from-white/20 to-transparent" />
-                        <span className="text-white/70 font-medium">{step}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </GlassCard>
-              </AnimatedSection>
-            </div>
+             </AnimatedSection>
           </div>
-        </section>
-      ))}
 
-      <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent" />
-        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+          <div className="space-y-48 md:space-y-64">
+            {detailedServices.map((service, index) => (
+              <ModernServiceCard
+                key={service.id}
+                title={service.title}
+                description={service.description}
+                shortDesc={service.shortDesc}
+                features={service.features}
+                isReversed={index % 2 === 1}
+                href={service.href}
+                onCtaClick={() => setIsLeadModalOpen(true)}
+                visual={
+                  <div className="w-full h-full relative group/img">
+                    <img 
+                      src={service.image} 
+                      alt={service.title}
+                      className="w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(255,255,255,0.3)] group-hover/img:scale-110 transition-transform duration-700" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-transparent to-transparent opacity-40 mix-blend-overlay pointer-events-none" />
+                  </div>
+                }
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section - Minimal & High Impact */}
+      <section className="py-[200px] bg-black text-center px-6 relative overflow-hidden border-t border-white/5">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0%,transparent_70%)] pointer-events-none" />
+        
+        <div className="max-w-[800px] mx-auto relative z-10">
           <AnimatedSection>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Ready to Get Started?
+            <Lock className="w-16 h-16 mx-auto text-primary mb-8" />
+            <h2 className="text-[48px] md:text-[80px] font-bold leading-[0.95] tracking-tighter mb-8 text-white">
+              Securing the<br /> Modern Frontier.
             </h2>
-            <p className="text-xl text-white/50 mb-12 max-w-2xl mx-auto">
-              Contact our team to discuss your security needs and receive a customized assessment proposal.
+            <p className="text-[20px] md:text-[24px] text-gray-400 mb-12 max-w-[600px] mx-auto">
+              Get an expert-led vulnerability assessment scope within 24 hours of initialization.
             </p>
-            <Link href="/contact">
-              <Button
-                size="lg"
-                className="bg-blue-500 text-black font-semibold"
-                data-testid="button-services-cta"
-              >
-                Schedule Consultation
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
+            <button
+              onClick={() => setIsLeadModalOpen(true)}
+              className="px-10 py-5 rounded-full bg-primary text-primary-foreground font-bold text-[18px] hover:shadow-[0_0_50px_rgba(255,255,255,0.3)] hover:scale-105 transition-all active:scale-95"
+            >
+              Initialize Assessment
+            </button>
           </AnimatedSection>
         </div>
       </section>
+
+      <LeadModal
+        isOpen={isLeadModalOpen}
+        onOpenChange={setIsLeadModalOpen}
+        title="Initialize Security Assessment"
+      />
     </div>
   );
 }

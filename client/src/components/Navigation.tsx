@@ -1,193 +1,257 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Shield, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import { LeadModal } from "./LeadModal";
+import { MagneticButton } from "./MagneticButton";
+import { ThreeCanvas } from "./ThreeCanvas";
+import { NavLogo3D } from "./NavLogo3D";
 
 const navLinks = [
-  { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
-  { href: "/about", label: "About" },
-  { href: "/why-us", label: "Why Us" },
-  { href: "/case-studies", label: "Case Studies" },
-  { href: "/careers", label: "Careers" },
-  { href: "/blog", label: "Blog" },
-  { href: "/contact", label: "Contact" },
+  { href: "/about", label: "About Us" },
+  { href: "/blog", label: "Resources" },
 ];
 
 export function Navigation() {
   const [location] = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
+  const [activeHoverIndex, setActiveHoverIndex] = useState<number | null>(null);
+
+  // Transform-based scroll tracking for nav background
+  const { scrollY } = useScroll();
+  const navBg = useTransform(
+    scrollY,
+    [0, 100],
+    ["rgba(0,0,0,0)", "rgba(0,0,0,0.8)"]
+  );
+  const navBlur = useTransform(scrollY, [0, 100], [0, 24]);
+  const navBorder = useTransform(
+    scrollY,
+    [0, 100],
+    ["rgba(255,255,255,0)", "rgba(255,255,255,0.08)"]
+  );
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Scroll to top and close mobile menu on route change
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "auto";
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
+
+  // Find active link index for pill indicator
+  const activeIndex = navLinks.findIndex((link) => location === link.href);
 
   return (
     <>
       <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-background/80 backdrop-blur-md border-b border-white/5"
-            : "bg-transparent"
-        }`}
+        className="fixed top-0 left-0 right-0 z-[100] flex justify-center mt-4 px-4 pointer-events-none"
       >
-        <nav className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between gap-4">
-            <Link href="/">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="flex items-center gap-3 cursor-pointer"
-                data-testid="link-logo"
-              >
-                <div className="relative">
-                  <Shield className="w-8 h-8 text-blue-400" />
-                  <div className="absolute inset-0 bg-blue-400/30 blur-lg" />
-                </div>
-                <span className="text-xl font-bold tracking-tight">
-                  Secventra
-                </span>
-              </motion.div>
-            </Link>
-
-            <div className="hidden lg:flex items-center gap-1">
-              {navLinks.map((link) => (
-                <Link key={link.href} href={link.href}>
-                  <Button
-                    variant="ghost"
-                    className={`text-sm font-medium ${
-                      location === link.href
-                        ? "text-blue-400"
-                        : "text-white/70"
-                    }`}
-                    data-testid={`link-nav-${link.label.toLowerCase().replace(" ", "-")}`}
-                  >
-                    {link.label}
-                  </Button>
-                </Link>
-              ))}
-            </div>
-
-            <div className="flex items-center gap-4">
-              <Link href="/contact">
-                <Button
-                  className="hidden sm:flex bg-blue-500 text-black font-semibold"
-                  data-testid="button-get-started"
+        <motion.nav
+          style={{
+            backgroundColor: navBg,
+            backdropFilter: useTransform(navBlur, (v) => `blur(${v}px)`),
+            borderColor: navBorder,
+          }}
+          className={`pointer-events-auto flex items-center justify-between transition-all duration-500 rounded-full border ${
+            isScrolled
+              ? "w-full max-w-[900px] shadow-[0_8px_32px_rgba(0,0,0,0.8)] py-2 px-4"
+              : "w-full max-w-[1200px] bg-transparent border-transparent py-4 px-2"
+          }`}
+        >
+          {/* Logo Section */}
+          <Link href="/">
+            <motion.div
+              className="flex items-center gap-3 cursor-pointer group px-2"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              <div className="w-12 h-12 relative flex items-center justify-center">
+                <ThreeCanvas
+                  camera={{ position: [0, 0, 3], fov: 45 }}
+                  controls={false}
                 >
-                  Get Started
-                </Button>
+                  <NavLogo3D />
+                </ThreeCanvas>
+              </div>
+              <span className="text-[16px] font-bold tracking-tight text-white group-hover:text-white/80 transition-colors uppercase">
+                Secventra
+              </span>
+            </motion.div>
+          </Link>
+
+          {/* Desktop Links with Morphing Pill */}
+          <div className="hidden md:flex items-center gap-1 bg-white/5 border border-white/5 px-2 py-1.5 rounded-full backdrop-blur-md relative">
+            {/* Animated pill background */}
+            {(activeIndex >= 0 || activeHoverIndex !== null) && (
+              <motion.div
+                layoutId="nav-pill"
+                className="absolute bg-white/10 rounded-full"
+                style={{
+                  height: "calc(100% - 6px)",
+                  top: "3px",
+                }}
+                transition={{
+                  type: "spring",
+                  damping: 20,
+                  stiffness: 200,
+                }}
+              />
+            )}
+
+            {navLinks.map((link, i) => (
+              <Link key={link.href} href={link.href}>
+                <motion.span
+                  onHoverStart={() => setActiveHoverIndex(i)}
+                  onHoverEnd={() => setActiveHoverIndex(null)}
+                  className={`relative z-10 text-[12px] font-semibold tracking-wide uppercase cursor-pointer transition-colors px-4 py-2 rounded-full ${
+                    location === link.href
+                      ? "text-white"
+                      : "text-white/60 hover:text-white"
+                  }`}
+                >
+                  {link.label}
+                </motion.span>
               </Link>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden text-white/70"
-                data-testid="button-mobile-menu"
-              >
-                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </Button>
-            </div>
+            ))}
           </div>
-        </nav>
+
+          {/* CTA & Mobile Toggle */}
+          <div className="flex items-center gap-4">
+            <MagneticButton intensity={0.2} className="hidden sm:block">
+              <motion.button
+                onClick={() => setIsLeadModalOpen(true)}
+                whileHover={{
+                  boxShadow: "0 0 30px rgba(255,255,255,0.5)",
+                }}
+                whileTap={{ scale: 0.95 }}
+                className="text-[12px] font-bold text-primary-foreground bg-primary px-6 py-3 rounded-full transition-all uppercase tracking-widest relative overflow-hidden group"
+              >
+                {/* Shimmer effect on hover */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"
+                />
+                <span className="relative z-10">Talk to an Expert</span>
+              </motion.button>
+            </MagneticButton>
+
+            <motion.button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              whileTap={{ scale: 0.9 }}
+              className="md:hidden text-white/90 focus:outline-none p-2 bg-white/5 rounded-full border border-white/10"
+            >
+              <AnimatePresence mode="wait">
+                {isMobileMenuOpen ? (
+                  <motion.div
+                    key="close"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <X className="w-5 h-5" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="menu"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Menu className="w-5 h-5" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
+          </div>
+        </motion.nav>
       </motion.header>
 
+      <LeadModal isOpen={isLeadModalOpen} onOpenChange={setIsLeadModalOpen} />
+
+      {/* Full-Screen Mobile Menu Takeover */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 lg:hidden"
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="fixed inset-0 z-[90] bg-[#020202]/98 backdrop-blur-3xl md:hidden flex flex-col items-center justify-center p-10"
           >
+            {/* Background grid */}
             <div
-              className="absolute inset-0 bg-background/95 backdrop-blur-xl"
-              onClick={() => setIsMobileMenuOpen(false)}
+              className="absolute inset-0 opacity-[0.02]"
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+                `,
+                backgroundSize: "80px 80px",
+              }}
             />
-            <div className="absolute top-20 left-6 w-32 h-32 bg-blue-500/20 rounded-full blur-[80px]" />
-            <div className="absolute bottom-40 right-10 w-40 h-40 bg-amber-500/10 rounded-full blur-[100px]" />
-            <motion.nav
+
+            <div className="flex flex-col items-center gap-8 w-full relative z-10">
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{
+                    delay: i * 0.08,
+                    duration: 0.6,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
+                  <Link href={link.href}>
+                    <span
+                      className={`text-[36px] sm:text-[48px] font-bold tracking-tighter cursor-pointer uppercase transition-all duration-300 ${
+                        location === link.href
+                          ? "text-white"
+                          : "text-white/40 hover:text-white"
+                      }`}
+                    >
+                      {link.label}
+                    </span>
+                  </Link>
+                </motion.div>
+              ))}
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="pt-8 border-t border-white/10 w-full max-w-[300px] text-center"
+              >
+                <button
+                  onClick={() => setIsLeadModalOpen(true)}
+                  className="text-[16px] sm:text-[18px] font-bold tracking-widest uppercase text-primary-foreground bg-primary px-8 py-3.5 rounded-full shadow-[0_0_40px_rgba(255,255,255,0.3)] w-full"
+                >
+                  Talk to an Expert
+                </button>
+              </motion.div>
+            </div>
+
+            {/* Corner brand */}
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="relative pt-20 px-4 h-full"
+              transition={{ delay: 0.5 }}
+              className="absolute bottom-8 text-[8px] font-mono tracking-[0.3em] text-white/20 uppercase"
             >
-              <div className="flex flex-col gap-0.5">
-                {navLinks.map((link, index) => (
-                  <motion.div
-                    key={link.href}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ 
-                      delay: 0.03 + index * 0.03,
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 30
-                    }}
-                  >
-                    <Link href={link.href}>
-                      <motion.div
-                        whileTap={{ scale: 0.98, x: 3 }}
-                        className={`flex items-center justify-between py-3 px-3 rounded-lg transition-colors ${
-                          location === link.href
-                            ? "bg-blue-500/20 border border-blue-500/30"
-                            : "active:bg-white/5"
-                        }`}
-                        data-testid={`link-mobile-${link.label.toLowerCase().replace(" ", "-")}`}
-                        aria-current={location === link.href ? "page" : undefined}
-                      >
-                        <span
-                          className={`text-base font-semibold ${
-                            location === link.href
-                              ? "text-blue-400"
-                              : "text-white/80"
-                          }`}
-                        >
-                          {link.label}
-                        </span>
-                        <ChevronRight 
-                          className={`w-4 h-4 ${
-                            location === link.href
-                              ? "text-blue-400"
-                              : "text-white/40"
-                          }`}
-                        />
-                      </motion.div>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="mt-4 px-3"
-              >
-                <Link href="/contact">
-                  <Button
-                    className="w-full bg-blue-500 text-black font-semibold h-12"
-                    data-testid="button-mobile-get-started"
-                  >
-                    Get Started Today
-                  </Button>
-                </Link>
-              </motion.div>
-            </motion.nav>
+              SEC://NAVIGATE
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

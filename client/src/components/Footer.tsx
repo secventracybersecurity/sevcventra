@@ -1,213 +1,243 @@
-import { Link } from "wouter";
-import { Shield, Linkedin, Twitter, Github } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Link, useLocation } from "wouter";
+import { FooterCore3D } from "./FooterCore3D";
+import { ThreeCanvas } from "./ThreeCanvas";
+import { Shield, Mail, Twitter, Linkedin, Github } from "lucide-react";
+import { LeadModal } from "./LeadModal";
+import { NavLogo3D } from "./NavLogo3D";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import { AnimatedSection, StaggerChildren, StaggerItem } from "./AnimatedSection";
 
-const footerLinks = {
-  services: [
-    { label: "Web App Pentesting", href: "/services#web" },
-    { label: "API Security", href: "/services#api" },
-    { label: "Cloud Security", href: "/services#cloud" },
-    { label: "Network Pentesting", href: "/services#network" },
-    { label: "Mobile Pentesting", href: "/services#mobile" },
-    { label: "Red Teaming", href: "/services#red-team" },
-  ],
-  company: [
-    { label: "About Us", href: "/about" },
-    { label: "Why Choose Us", href: "/why-us" },
-    { label: "Case Studies", href: "/case-studies" },
-    { label: "Careers", href: "/careers" },
-    { label: "Blog", href: "/blog" },
-    { label: "Contact", href: "/contact" },
-  ],
-  legal: [
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Cookie Policy", href: "/cookies" },
-  ],
-};
+function InfiniteMarquee() {
+  const text = "PROTECT • INVESTIGATE • ASSURE • DEFEND • MONITOR • RESPOND • ";
+  return (
+    <div className="overflow-hidden border-b border-white/5 py-4 relative">
+      <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-black to-transparent z-10" />
+      <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-black to-transparent z-10" />
+      <motion.div
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="flex whitespace-nowrap"
+      >
+        {[0, 1, 2, 3].map((i) => (
+          <span
+            key={i}
+            className="text-[11px] font-bold tracking-[0.4em] uppercase text-white/15 mx-4"
+          >
+            {text}
+          </span>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+function SocialIcon({ children, label }: { children: React.ReactNode; label: string }) {
+  return (
+    <motion.div
+      whileHover={{ scale: 1.1, y: -2 }}
+      whileTap={{ scale: 0.95 }}
+      className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/5 hover:border-white/20 cursor-pointer transition-colors group relative"
+      aria-label={label}
+    >
+      {children}
+      {/* Glow ring on hover */}
+      <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[0_0_15px_rgba(255,255,255,0.1)] pointer-events-none" />
+    </motion.div>
+  );
+}
 
 export function Footer() {
+  const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
+  const [location] = useLocation();
+  const isHomePage = location === "/";
+  const footerRef = useRef<HTMLElement>(null);
+  const isInView = useInView(footerRef, { once: true, margin: "-100px" });
+
   return (
-    <footer className="bg-background border-t border-white/5">
-      {/* Mobile compact footer */}
-      <div className="md:hidden px-4 py-8">
-        <div className="flex items-center justify-between mb-4">
-          <Link href="/">
-            <div className="flex items-center gap-2 cursor-pointer" data-testid="link-footer-logo-mobile">
-              <Shield className="w-6 h-6 text-blue-400" />
-              <span className="text-lg font-bold">Secventra</span>
-            </div>
-          </Link>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="w-8 h-8 rounded-full bg-white/5" asChild>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" data-testid="link-linkedin-mobile">
-                <Linkedin className="w-4 h-4 text-white/50" />
-              </a>
-            </Button>
-            <Button variant="ghost" size="icon" className="w-8 h-8 rounded-full bg-white/5" asChild>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" data-testid="link-twitter-mobile">
-                <Twitter className="w-4 h-4 text-white/50" />
-              </a>
-            </Button>
-            <Button variant="ghost" size="icon" className="w-8 h-8 rounded-full bg-white/5" asChild>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" data-testid="link-github-mobile">
-                <Github className="w-4 h-4 text-white/50" />
-              </a>
-            </Button>
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-white/40 mb-3">
-          {footerLinks.company.slice(0, 4).map((link) => (
-            <Link key={link.href} href={link.href}>
-              <span className="cursor-pointer">{link.label}</span>
-            </Link>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-x-3 text-xs text-white/30">
-          {footerLinks.legal.map((link) => (
-            <Link key={link.href} href={link.href}>
-              <span className="cursor-pointer">{link.label}</span>
-            </Link>
-          ))}
-        </div>
-        <div className="mt-4 pt-3 border-t border-white/5 text-center">
-          <p className="text-white/30 text-xs">© {new Date().getFullYear()} Secventra. All rights reserved.</p>
-        </div>
-      </div>
+    <footer
+      ref={footerRef}
+      className={`relative bg-black text-gray-400 border-t border-white/5 overflow-hidden transition-all duration-700 ${
+        isHomePage ? "py-0" : "py-16 sm:py-20"
+      }`}
+    >
+      {/* Infinite Marquee — only on home */}
+      {isHomePage && <InfiniteMarquee />}
 
-      {/* Desktop full footer */}
-      <div className="hidden md:block max-w-7xl mx-auto px-6 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-          <div className="lg:col-span-1">
-            <Link href="/">
-              <div className="flex items-center gap-3 mb-6 cursor-pointer" data-testid="link-footer-logo">
-                <div className="relative">
-                  <Shield className="w-8 h-8 text-blue-400" />
-                  <div className="absolute inset-0 bg-blue-400/30 blur-lg" />
-                </div>
-                <span className="text-xl font-bold tracking-tight">Secventra</span>
+      {/* 3D Core Background Element - Only on Home */}
+      {isHomePage && (
+        <div className="absolute right-[-20%] bottom-[-20%] w-[500px] sm:w-[800px] h-[500px] sm:h-[800px] opacity-20 pointer-events-none">
+          <ThreeCanvas camera={{ position: [0, 0, 8], fov: 45 }} controls={false}>
+            <FooterCore3D />
+          </ThreeCanvas>
+        </div>
+      )}
+
+      <div className={`max-w-[1200px] mx-auto relative z-10 px-6 ${isHomePage ? 'pt-16 sm:pt-24' : ''}`}>
+        {/* Massive Pre-footer CTA - Only on Home */}
+        {isHomePage && (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-24 sm:mb-32"
+          >
+            <h2 className="text-[clamp(2.5rem,8vw,6rem)] font-bold text-white tracking-tighter leading-[0.9] mb-8">
+              Deploy.<br />
+              Defend.<br />
+              <span className="text-gradient-animated">Dominate.</span>
+            </h2>
+            <motion.button
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 0 50px rgba(255,255,255,0.2)",
+              }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsLeadModalOpen(true)}
+              className="px-10 py-5 rounded-full bg-white text-black font-bold text-[17px] uppercase tracking-widest transition-all relative overflow-hidden group"
+              data-cursor="cta"
+            >
+              <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              <span className="relative z-10">Initialize Platform</span>
+            </motion.button>
+          </motion.div>
+        )}
+
+        <LeadModal isOpen={isLeadModalOpen} onOpenChange={setIsLeadModalOpen} />
+
+        <div
+          className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 mb-20 ${
+            isHomePage ? "border-t border-white/10 pt-20" : ""
+          }`}
+        >
+          {/* Brand Column */}
+          <div className="sm:col-span-2 md:col-span-1">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden bg-white/5 border border-white/10">
+                <img
+                  src="/logo.png"
+                  alt="Secventra Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
-            </Link>
-            <p className="text-white/50 text-sm leading-relaxed mb-6">
-              Securing Tomorrow, Today. Elite penetration testing and offensive
-              security services for enterprise clients worldwide.
+              <span className="text-[15px] font-bold text-white tracking-widest uppercase text-glow-white">
+                Secventra
+              </span>
+            </div>
+            <p className="text-[13px] leading-[1.6] max-w-[250px] text-white/40 mb-8 font-mono">
+              Next-generation continuous threat exposure management &
+              autonomous XDR.
             </p>
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full bg-white/5 border border-white/10 text-white/50"
-                asChild
-              >
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-testid="link-linkedin"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </a>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full bg-white/5 border border-white/10 text-white/50"
-                asChild
-              >
-                <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-testid="link-twitter"
-                >
-                  <Twitter className="w-5 h-5" />
-                </a>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full bg-white/5 border border-white/10 text-white/50"
-                asChild
-              >
-                <a
-                  href="https://github.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-testid="link-github"
-                >
-                  <Github className="w-5 h-5" />
-                </a>
-              </Button>
+            <div className="flex gap-3">
+              <SocialIcon label="Twitter">
+                <Twitter className="w-4 h-4 text-white/50 group-hover:text-white transition-colors" />
+              </SocialIcon>
+              <SocialIcon label="LinkedIn">
+                <Linkedin className="w-4 h-4 text-white/50 group-hover:text-white transition-colors" />
+              </SocialIcon>
+              <SocialIcon label="GitHub">
+                <Github className="w-4 h-4 text-white/50 group-hover:text-white transition-colors" />
+              </SocialIcon>
             </div>
           </div>
 
+          {/* Platform Column */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-6 uppercase tracking-wider">
-              Services
+            <h4 className="text-[11px] font-bold text-white mb-6 uppercase tracking-[0.2em] opacity-40">
+              Platform
             </h4>
-            <ul className="space-y-3">
-              {footerLinks.services.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href}>
-                    <span
-                      className="text-white/50 text-sm cursor-pointer"
-                      data-testid={`link-footer-${link.label.toLowerCase().replace(/\s+/g, "-")}`}
-                    >
-                      {link.label}
-                    </span>
-                  </Link>
-                </li>
-              ))}
+            <ul className="space-y-4 text-[14px]">
+              <li>
+                <Link href="/services">
+                  <span className="hover:text-white transition-colors cursor-pointer text-white/50 hover:translate-x-1 inline-block transform">
+                    Managed Detection
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/services">
+                  <span className="hover:text-white transition-colors cursor-pointer text-white/50 hover:translate-x-1 inline-block transform">
+                    Continuous API Testing
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/services">
+                  <span className="hover:text-white transition-colors cursor-pointer text-white/50 hover:translate-x-1 inline-block transform">
+                    Zero Trust Architecture
+                  </span>
+                </Link>
+              </li>
             </ul>
           </div>
 
+          {/* Company Column */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-6 uppercase tracking-wider">
+            <h4 className="text-[11px] font-bold text-white mb-6 uppercase tracking-[0.2em] opacity-40">
               Company
             </h4>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href}>
-                    <span
-                      className="text-white/50 text-sm cursor-pointer"
-                      data-testid={`link-footer-${link.label.toLowerCase().replace(/\s+/g, "-")}`}
-                    >
-                      {link.label}
-                    </span>
-                  </Link>
-                </li>
-              ))}
+            <ul className="space-y-4 text-[14px]">
+              <li>
+                <Link href="/about">
+                  <span className="hover:text-white transition-colors cursor-pointer text-white/50 hover:translate-x-1 inline-block transform">
+                    About Us
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/careers">
+                  <span className="hover:text-white transition-colors cursor-pointer text-white/50 hover:translate-x-1 inline-block transform">
+                    Careers
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog">
+                  <span className="hover:text-white transition-colors cursor-pointer text-white/50 hover:translate-x-1 inline-block transform">
+                    Security Resources
+                  </span>
+                </Link>
+              </li>
             </ul>
           </div>
 
+          {/* Legal Column */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-6 uppercase tracking-wider">
+            <h4 className="text-[11px] font-bold text-white mb-6 uppercase tracking-[0.2em] opacity-40">
               Legal
             </h4>
-            <ul className="space-y-3">
-              {footerLinks.legal.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href}>
-                    <span
-                      className="text-white/50 text-sm cursor-pointer"
-                      data-testid={`link-footer-${link.label.toLowerCase().replace(/\s+/g, "-")}`}
-                    >
-                      {link.label}
-                    </span>
-                  </Link>
-                </li>
-              ))}
+            <ul className="space-y-4 text-[14px]">
+              <li>
+                <Link href="/privacy">
+                  <span className="hover:text-white transition-colors cursor-pointer text-white/50 hover:translate-x-1 inline-block transform">
+                    Privacy Policy
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms">
+                  <span className="hover:text-white transition-colors cursor-pointer text-white/50 hover:translate-x-1 inline-block transform">
+                    Terms of Service
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/compliance">
+                  <span className="hover:text-white transition-colors cursor-pointer text-white/50 hover:translate-x-1 inline-block transform">
+                    Compliance
+                  </span>
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 text-sm">
-            © {new Date().getFullYear()} Secventra. All rights reserved.
-          </p>
-          <p className="text-white/40 text-sm">
-            Built with security in mind.
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-12 border-t border-white/5 text-[11px] font-mono tracking-widest uppercase opacity-30 text-center md:text-left pb-8">
+          <p>© {new Date().getFullYear()} Secventra Inc. All rights reserved.</p>
+          <p className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block shadow-[0_0_10px_rgba(52,211,153,0.8)] animate-pulse" />
+            All Systems Operational
           </p>
         </div>
       </div>
